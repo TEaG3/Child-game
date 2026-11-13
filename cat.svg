@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 210" role="img" aria-label="قطة كرتونية">
+<ellipse cx="90" cy="198" rx="55" ry="8" fill="#d9e9df"/>
+<path d="M43 78 35 25 77 52Q90 47 103 52L145 25 137 82Q151 102 145 135Q137 178 90 181Q43 178 35 135Q29 102 43 78Z" fill="#f4b96e" stroke="#b9793f" stroke-width="4"/>
+<path d="M47 68 43 38 70 57M133 68 137 38 110 57" fill="#f6d6b1" stroke="#b9793f" stroke-width="3"/>
+<ellipse cx="68" cy="105" rx="7" ry="10" fill="#284b4a"/><ellipse cx="112" cy="105" rx="7" ry="10" fill="#284b4a"/>
+<path d="M82 125Q90 134 98 125Q90 116 82 125Z" fill="#d77c83"/>
+<path d="M90 132Q83 145 72 138M90 132Q97 145 108 138" fill="none" stroke="#80513c" stroke-width="3" stroke-linecap="round"/>
+<circle cx="54" cy="124" r="9" fill="#ef9b91" opacity=".65"/><circle cx="126" cy="124" r="9" fill="#ef9b91" opacity=".65"/>
+<path d="M60 125 20 116M60 135 18 139M120 125 160 116M120 135 162 139" stroke="#8b654d" stroke-width="2.5" stroke-linecap="round"/>
+<path d="M50 174Q90 159 130 174L143 201H37Z" fill="#35a879"/><path d="M76 174 90 187 104 174" fill="#fff"/>
+</svg>
