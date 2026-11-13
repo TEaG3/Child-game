@@ -31,7 +31,7 @@ canvas{width:100%;height:210px;border:2px dashed #9acbb0;border-radius:16px;back
 footer{text-align:center;color:#678078;font-size:12px;margin:28px 0 10px;line-height:1.8}
 @media(max-width:650px){.hero{grid-template-columns:1fr;text-align:center}.mascots{order:-1}.mascot{width:76px}.child-mascot{width:72px}.tiles{grid-template-columns:repeat(2,1fr)}.tile{min-height:120px}.letter-grid{grid-template-columns:repeat(5,1fr)}header{padding:10px 12px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
-.coach-box{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid #d9f0e2;border-radius:20px;padding:10px 14px;margin:14px 0;box-shadow:var(--shadow);min-height:104px}.coach-box img{width:88px;height:88px;object-fit:contain;flex:none}.coach-bubble{background:#f0fbf4;border-radius:16px;padding:10px 14px;line-height:1.8;flex:1;font-weight:bold;color:#185640}.coach-bubble small{display:block;font-weight:normal;color:#60776e}.coach-box.try{border-color:#c8e3f5}.coach-box.try .coach-bubble{background:#eff7ff}@media(max-width:420px){.coach-box img{width:72px;height:72px}.coach-box{gap:8px;padding:8px}}</style></head>
+.coach-box{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid #d9f0e2;border-radius:20px;padding:10px 14px;margin:14px 0;box-shadow:var(--shadow);min-height:104px}.coach-box img{width:88px;height:88px;object-fit:contain;flex:none}.coach-bubble{background:#f0fbf4;border-radius:16px;padding:10px 14px;line-height:1.8;flex:1;font-weight:bold;color:#185640}.coach-bubble small{display:block;font-weight:normal;color:#60776e}.coach-box.try{border-color:#c8e3f5}.coach-box.try .coach-bubble{background:#eff7ff}@media(max-width:420px){.coach-box img{width:72px;height:72px}.coach-box{gap:8px;padding:8px}}.category-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:12px 0 18px}.category-card{min-height:165px;border:2px solid white;border-radius:24px;padding:18px;text-align:right;box-shadow:var(--shadow);color:var(--ink);transition:transform .18s}.category-card:active{transform:scale(.98)}.category-card>span{display:block;font-size:42px;margin-bottom:10px}.category-card b{display:block;font-size:20px}.category-card small{display:block;line-height:1.7;margin-top:8px;color:#42635a}.education-card{background:linear-gradient(135deg,#e0f5e9,#fff)}.games-card{background:linear-gradient(135deg,#fff0c9,#e2f1ff)}@media(max-width:520px){.category-cards{grid-template-columns:1fr}.category-card{min-height:130px}}</style></head>
 <body>
 <header><div class="brand"><span class="moon">🌙</span><div><h1>رحلة المسلم الصغير</h1><small>نتعلّم، نلعب، ونكبر بالعلم والأخلاق</small></div></div><div class="top-actions"><button class="round" id="soundBtn" aria-label="تشغيل الصوت">🔊</button><button class="round" id="homeBtn" aria-label="الرئيسية">⌂</button></div></header>
 <main>
@@ -41,7 +41,15 @@ footer{text-align:center;color:#678078;font-size:12px;margin:28px 0 10px;line-he
 <div class="progress"><span>🏅</span><div class="bar"><span id="progressBar"></span></div><span class="stars" id="score">0 ⭐</span></div>
 <aside class="coach-box" id="coachBox" aria-live="polite"><img id="coachImg" src="./coach-happy.svg" alt="سامي الأرنب يشجعك"><div class="coach-bubble"><span id="coachText">مرحباً يا بطل! أنا سامي، سأساعدك وأشجعك في كل محاولة.</span><small id="coachSub">ابدأ نشاطك، ولا تخف من الخطأ؛ نتعلم بالمحاولة.</small></div></aside>
 <div id="home">
-<div class="section-title"><h2>اختر مغامرتك</h2><small>ستجد نشاطاً جديداً كل مرة</small></div>
+<div class="category-chooser" id="categoryChooser">
+<div class="section-title"><h2>اختر طريق رحلتك</h2><small>التعلّم والمرح في مكان واحد</small></div>
+<div class="category-cards">
+<button class="category-card education-card" id="educationCategory"><span>📚</span><b>القسم التعليمي</b><small>الحروف والقراءة والكتابة والحساب والقيم والأذكار</small></button>
+<button class="category-card games-card" id="gamesCategory"><span>🎮</span><b>قسم الألعاب</b><small>ألعاب الذاكرة والتركيز والتحديات الممتعة</small></button>
+</div>
+</div>
+<div id="activityChooser" hidden>
+<div class="section-title"><h2 id="categoryHeading">أنشطة الرحلة</h2><button class="back" id="categoryBack">العودة للاختيار ←</button></div><h2>اختر مغامرتك</h2><small>ستجد نشاطاً جديداً كل مرة</small></div>
 <div class="tiles">
 <button class="tile t1" data-open="letters"><span class="emoji">🔤</span><b>مدينة الحروف</b><small>تعرف إلى الحروف وأصواتها وكلماتها</small></button>
 <button class="tile t2" data-open="reading"><span class="emoji">📖</span><b>حديقة القراءة</b><small>اقرأ كلمات وجملاً قصيرة</small></button>
@@ -91,4 +99,42 @@ const symbols=['⭐','🍎','🚀','🐠','🌙','⚽','🌻','🧸','🍉'];let
 function resetMemory(){$('memorySymbols').textContent='⭐ 🍎 🚀';$('memoryPrompt').textContent='اضغط ابدأ التحدي عندما تكون مستعداً.';$('memoryChoices').innerHTML='';$('memoryFeedback').textContent=''}
 function startMem(){let shown=[...symbols].sort(()=>Math.random()-.5).slice(0,4);memCorrect=shown[Math.floor(Math.random()*shown.length)];$('memorySymbols').textContent=shown.join('   ');$('memoryPrompt').textContent='احفظ الرموز...';$('memoryChoices').innerHTML='';setTimeout(()=>{$('memorySymbols').textContent='❔ ❔ ❔ ❔';$('memoryPrompt').textContent='أي رمز كان موجوداً؟';const choices=[memCorrect,...symbols.filter(s=>s!==memCorrect).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);$('memoryChoices').innerHTML=choices.map(s=>'<button class="choice">'+s+'</button>').join('');document.querySelectorAll('#memoryChoices .choice').forEach(b=>b.onclick=()=>{if(b.textContent===memCorrect){$('memoryFeedback').textContent='ذاكرة قوية! أحسنت 🌟';b.classList.add('correct');coachFeedback(true,'ذاكرتك تتحسن بالتدريب!');reward()}else{$('memoryFeedback').textContent='حاول مرة ثانية، التدريب يقوّي الذاكرة.';coachFeedback(false,'تذكّر الرموز التي شاهدتها، وخذ وقتك في التفكير.');tone(220,.2)}})},2600)}
 $('startMemory').onclick=startMem;updateScore();if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-</script><script src="./progress.js"></script></body></html>
+</script><script src="./progress.js"></script>
+<script>
+(()=> {
+ const chooser=document.getElementById('categoryChooser');
+ const activities=document.getElementById('activityChooser');
+ const heading=document.getElementById('categoryHeading');
+ const education=document.getElementById('educationCategory');
+ const games=document.getElementById('gamesCategory');
+ const back=document.getElementById('categoryBack');
+ const tiles=[...document.querySelectorAll('#home .tiles [data-open]')];
+ const tools=document.querySelector('#home .extra-tools');
+ function showCategories(){
+   chooser.hidden=false; activities.hidden=true;
+   tiles.forEach(tile=>tile.hidden=false);
+   if(tools) tools.hidden=false;
+   window.scrollTo({top:0,behavior:'smooth'});
+ }
+ function showCategory(kind){
+   chooser.hidden=true; activities.hidden=false;
+   const isEducation=kind==='education';
+   heading.textContent=isEducation?'📚 القسم التعليمي':'🎮 قسم الألعاب';
+   tiles.forEach(tile=>{
+     const id=tile.dataset.open;
+     tile.hidden=isEducation ? id==='memory' : id!=='memory';
+   });
+   if(tools) tools.hidden=true;
+   window.scrollTo({top:0,behavior:'smooth'});
+ }
+ education.addEventListener('click',()=>showCategory('education'));
+ games.addEventListener('click',()=>showCategory('games'));
+ back.addEventListener('click',showCategories);
+ document.querySelectorAll('.back:not(#categoryBack)').forEach(button=>{
+   button.addEventListener('click',()=>{showCategories()});
+ });
+ const homeButton=document.getElementById('homeBtn');
+ if(homeButton) homeButton.addEventListener('click',showCategories);
+ showCategories();
+})();
+</script></body></html>
