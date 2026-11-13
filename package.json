@@ -1,0 +1,17 @@
+{
+  "name": "little-muslim-child-game",
+  "version": "1.0.0",
+  "private": true,
+  "description": "رحلة المسلم الصغير - offline-first educational PWA and Android app",
+  "scripts": {
+    "android:sync": "cap sync android",
+    "android:open": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/core": "latest",
+    "@capacitor/android": "latest"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "latest"
+  }
+}
