@@ -144,6 +144,7 @@ $('startMemory').onclick=startMem;updateScore();if('serviceWorker'in navigator&&
    window.scrollTo({top:0,behavior:'smooth'});
  }
  function showCategory(kind){
+   if(kind==='games'){location.href='./games.html';return;}
    chooser.hidden=true; activities.hidden=false;
    const isEducation=kind==='education';
    heading.textContent=isEducation?'📚 القسم التعليمي':'🎮 قسم الألعاب';
