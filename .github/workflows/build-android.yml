@@ -4,10 +4,12 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'games.html'
       - 'progress.js'
       - 'sw.js'
       - 'manifest.webmanifest'
-      - '*.svg'
+      - 'icon.svg'
+      - '*.jpg'
       - 'package.json'
       - 'capacitor.config.json'
       - '.github/workflows/build-android.yml'
@@ -37,7 +39,7 @@ jobs:
       - name: Prepare offline web bundle
         run: |
           mkdir -p android-web
-          cp index.html progress.js sw.js manifest.webmanifest icon.svg coach-happy.svg coach-try.svg child-boy.svg child-girl.svg android-web/
+          cp index.html games.html progress.js sw.js manifest.webmanifest icon.svg boy.jpg girl.jpg rabbit.jpg cat.jpg android-web/
       - name: Generate Android project
         run: npx cap add android
       - name: Sync local web assets
