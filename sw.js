@@ -1,6 +1,6 @@
 'use strict';
-const CACHE='little-muslim-v8';
-const FILES=['./','./index.html','./games.html','./progress.js','./manifest.webmanifest','./icon.svg','./boy.jpg','./girl.jpg','./rabbit.jpg','./cat.jpg','./sw.js'];
+const CACHE='little-muslim-v9';
+const FILES=['./','./index.html','./games.html','./progress.js','./manifest.webmanifest','./icon.svg','./boy.jpg','./child-girl.svg','./coach-happy.svg','./cat.svg','./sw.js'];
 self.addEventListener('install',event=>{
  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting()));
 });
