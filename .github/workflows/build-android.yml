@@ -1,0 +1,57 @@
+name: Build Android APK
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'progress.js'
+      - 'sw.js'
+      - 'manifest.webmanifest'
+      - '*.svg'
+      - 'package.json'
+      - 'capacitor.config.json'
+      - '.github/workflows/build-android.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: android-build
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
+      - name: Install Capacitor
+        run: npm install
+      - name: Prepare offline web bundle
+        run: |
+          mkdir -p android-web
+          cp index.html progress.js sw.js manifest.webmanifest icon.svg coach-happy.svg coach-try.svg child-boy.svg child-girl.svg android-web/
+      - name: Generate Android project
+        run: npx cap add android
+      - name: Sync local web assets
+        run: npx cap sync android
+      - name: Build installable debug APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: little-muslim-android-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
