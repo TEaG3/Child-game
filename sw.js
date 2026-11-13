@@ -1,1 +1,29 @@
-const CACHE='little-muslim-v5';const FILES=['./','./index.html','./progress.js','./manifest.webmanifest','./icon.svg','./coach-happy.svg','./coach-try.svg','./child-boy.svg','./child-girl.svg'];self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES))));self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))));self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;e.respondWith(caches.match(e.request).then(hit=>hit||fetch(e.request).then(res=>{if(res&&res.ok&&new URL(e.request.url).origin===location.origin){let copy=res.clone();caches.open(CACHE).then(c=>c.put(e.request,copy))}return res}).catch(()=>caches.match('./index.html'))))});
+'use strict';
+const CACHE='little-muslim-v6';
+const FILES=['./','./index.html','./progress.js','./manifest.webmanifest','./icon.svg','./coach-happy.svg','./coach-try.svg','./child-boy.svg','./child-girl.svg','./sw.js'];
+self.addEventListener('install',event=>{
+ event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)).then(()=>self.skipWaiting()));
+});
+self.addEventListener('activate',event=>{
+ event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));
+});
+self.addEventListener('fetch',event=>{
+ if(event.request.method!=='GET')return;
+ const url=new URL(event.request.url);
+ if(url.origin!==self.location.origin)return;
+ event.respondWith((async()=>{
+   try{
+     const response=await fetch(event.request);
+     if(response&&response.ok){
+       const cache=await caches.open(CACHE);
+       cache.put(event.request,response.clone()).catch(()=>{});
+     }
+     return response;
+   }catch(error){
+     const cached=await caches.match(event.request);
+     if(cached)return cached;
+     if(event.request.mode==='navigate')return (await caches.match('./index.html'))||Response.error();
+     return Response.error();
+   }
+ })());
+});
