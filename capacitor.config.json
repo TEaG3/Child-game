@@ -1,0 +1,10 @@
+{
+  "appId": "com.teag3.littlemuslim",
+  "appName": "رحلة المسلم الصغير",
+  "webDir": "android-web",
+  "bundledWebRuntime": false,
+  "backgroundColor": "#e9fff3",
+  "android": {
+    "allowMixedContent": false
+  }
+}
