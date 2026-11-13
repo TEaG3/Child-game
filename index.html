@@ -81,11 +81,38 @@ const alphabet=[['ا','أسد','🦁'],['ب','بطة','🦆'],['ت','تفاح','
 $('letterGrid').innerHTML=alphabet.map((x,i)=>'<button class="letter" data-letter="'+i+'">'+x[0]+'</button>').join('');
 function chooseLetter(i){let x=alphabet[i];$('chosenLetter').textContent=x[0];$('letterWord').textContent=x[1]+' '+x[2];$('letterHint').textContent='حرف '+({'ا':'الألف','ب':'الباء','ت':'التاء','ث':'الثاء','ج':'الجيم','ح':'الحاء','خ':'الخاء','د':'الدال','ذ':'الذال','ر':'الراء','ز':'الزاي','س':'السين','ش':'الشين','ص':'الصاد','ض':'الضاد','ط':'الطاء','ظ':'الظاء','ع':'العين','غ':'الغين','ف':'الفاء','ق':'القاف','ك':'الكاف','ل':'اللام','م':'الميم','ن':'النون','ه':'الهاء','و':'الواو','ي':'الياء'}[x[0]]||x[0]);document.querySelectorAll('.letter').forEach(b=>b.classList.toggle('selected',Number(b.dataset.letter)===i));}
 document.querySelectorAll('.letter').forEach(b=>b.onclick=()=>{chooseLetter(Number(b.dataset.letter));tone(600)});chooseLetter(0);$('speakLetter').onclick=()=>speak($('letterHint').textContent+'، '+$('letterWord').textContent);
-const words=[['قمر','🌙','الشمس','القمر','الكتاب','الكرة'],['كتاب','📘','القلم','الكتاب','الباب','الزهرة'],['تفاحة','🍎','تفاحة','موزة','سيارة','سمكة'],['مدرسة','🏫','بيت','مدرسة','حديقة','سفينة'],['سمكة','🐟','قطة','طائرة','سمكة','شجرة'],['شمس','☀️','قمر','نجمة','شمس','مطر'],['مفتاح','🔑','مفتاح','كرسي','حذاء','باب']];
-function newRead(){let w=words[Math.floor(Math.random()*words.length)];$('readWord').textContent=w[0];$('readEmoji').textContent=w[1];let opts=[w[2],w[3],w[4],w[5]].sort(()=>Math.random()-.5);$('readChoices').innerHTML=opts.map(o=>'<button class="choice">'+o+'</button>').join('');$('readFeedback').textContent='';document.querySelectorAll('#readChoices .choice').forEach(b=>b.onclick=()=>{if(b.textContent===w[2]){b.classList.add('correct');$('readFeedback').textContent='أحسنت! قراءة رائعة 🌟';coachFeedback(true,'أكمل إلى الكلمة التالية عندما تكون مستعداً.');reward()}else{b.classList.add('wrong');$('readFeedback').textContent='محاولة جميلة، اقرأ الكلمة مرة أخرى.';coachFeedback(false,'استمع إلى الكلمة وحاول اختيار معناها الصحيح.');tone(220,.2)}})}
+// كل سؤال يحدد إجابته الصحيحة صراحةً؛ لا نعتمد على ترتيب الخيارات.
+const words=[
+ {word:'قمر',emoji:'🌙',answer:'القمر',options:['الشمس','القمر','الكتاب','الكرة']},
+ {word:'كتاب',emoji:'📘',answer:'الكتاب',options:['القلم','الكتاب','الباب','الزهرة']},
+ {word:'تفاحة',emoji:'🍎',answer:'تفاحة',options:['تفاحة','موزة','سيارة','سمكة']},
+ {word:'مدرسة',emoji:'🏫',answer:'مدرسة',options:['بيت','مدرسة','حديقة','سفينة']},
+ {word:'سمكة',emoji:'🐟',answer:'سمكة',options:['قطة','طائرة','سمكة','شجرة']},
+ {word:'شمس',emoji:'☀️',answer:'شمس',options:['قمر','نجمة','شمس','مطر']},
+ {word:'مفتاح',emoji:'🔑',answer:'مفتاح',options:['مفتاح','كرسي','حذاء','باب']}
+];
+function newRead(){
+ const w=words[Math.floor(Math.random()*words.length)];
+ $('readWord').textContent=w.word;$('readEmoji').textContent=w.emoji;
+ const opts=[...w.options].sort(()=>Math.random()-.5);
+ $('readChoices').innerHTML=opts.map(o=>'<button class="choice" type="button">'+o+'</button>').join('');
+ $('readFeedback').textContent='';
+ document.querySelectorAll('#readChoices .choice').forEach(b=>b.onclick=()=>{
+   if(b.disabled)return;
+   if(b.textContent===w.answer){
+     document.querySelectorAll('#readChoices .choice').forEach(x=>x.disabled=true);
+     b.classList.add('correct');$('readFeedback').textContent='أحسنت! قراءة رائعة 🌟';
+     coachFeedback(true,'أكمل إلى الكلمة التالية عندما تكون مستعداً.');reward();
+   }else{
+     b.classList.add('wrong');b.disabled=true;
+     $('readFeedback').textContent='ليست هذه الصورة المطابقة. حاول مرة أخرى.';
+     coachFeedback(false,'طابق الكلمة مع الصورة ثم اختر معناها الصحيح.');tone(220,.2);
+   }
+ });
+}
 $('nextRead').onclick=newRead;$('speakRead').onclick=()=>speak($('readWord').textContent);
 let mAnswer=0;const digits=n=>String(n).replace(/[0-9]/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
-function newMath(){let a=1+Math.floor(Math.random()*10),b=1+Math.floor(Math.random()*9),sub=Math.random()>.5,ans=sub?Math.max(a,b)-Math.min(a,b):a+b;if(sub&&a<b)[a,b]=[b,a];mAnswer=ans;$('mathQuestion').textContent=digits(a)+' '+(sub?'−':'+')+' '+digits(b)+' = ؟';$('mathHint').textContent=sub?'كم يتبقى؟':'كم يصبح المجموع؟';let set=[ans,ans+1,Math.max(0,ans-1),ans+3].sort(()=>Math.random()-.5);$('mathChoices').innerHTML=set.map(n=>'<button class="choice">'+digits(n)+'</button>').join('');$('mathFeedback').textContent='';document.querySelectorAll('#mathChoices .choice').forEach(b=>b.onclick=()=>{if(Number(b.textContent.replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)))===mAnswer){b.classList.add('correct');$('mathFeedback').textContent='ممتاز! عقلك يتدرّب ويكبر 🧠';coachFeedback(true,'أحسنت في الحساب! جرّب مسألة جديدة.');reward()}else{$('mathFeedback').textContent='لا بأس، جرّب مرة أخرى.';coachFeedback(false,'راجع عملية الجمع أو الطرح، ثم اختر الإجابة من جديد.');tone(240,.2)}})}
+function newMath(){let a=1+Math.floor(Math.random()*10),b=1+Math.floor(Math.random()*9),sub=Math.random()>.5,ans=sub?Math.max(a,b)-Math.min(a,b):a+b;if(sub&&a<b)[a,b]=[b,a];mAnswer=ans;$('mathQuestion').textContent=digits(a)+' '+(sub?'−':'+')+' '+digits(b)+' = ؟';$('mathHint').textContent=sub?'كم يتبقى؟':'كم يصبح المجموع؟';let set=[ans,ans+1,Math.max(0,ans-1),ans+3].sort(()=>Math.random()-.5);$('mathChoices').innerHTML=set.map(n=>'<button class="choice">'+digits(n)+'</button>').join('');$('mathFeedback').textContent='';document.querySelectorAll('#mathChoices .choice').forEach(b=>b.onclick=()=>{if(b.disabled)return;const value=Number(b.textContent.replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)));if(value===mAnswer){document.querySelectorAll('#mathChoices .choice').forEach(x=>x.disabled=true);b.classList.add('correct');$('mathFeedback').textContent='ممتاز! عقلك يتدرّب ويكبر 🧠';coachFeedback(true,'أحسنت في الحساب! جرّب مسألة جديدة.');reward()}else{b.disabled=true;$('mathFeedback').textContent='لا بأس، جرّب مرة أخرى.';coachFeedback(false,'راجع عملية الجمع أو الطرح، ثم اختر الإجابة من جديد.');tone(240,.2)}})}
 $('nextMath').onclick=newMath;
 const islamItems=[['ذكر عند البدء','بِسْمِ الله','نقولها عند بدء الطعام والأعمال الطيبة.'],['ذكر الحمد','الْحَمْدُ لِلَّه','نحمد الله على نعمه الكثيرة.'],['ذكر التسبيح','سُبْحَانَ الله','ننزه الله عن كل نقص.'],['ذكر الاستغفار','أَسْتَغْفِرُ الله','نطلب من الله المغفرة ونتعلم تصحيح الخطأ.'],['دعاء العلم','رَبِّ زِدْنِي عِلْمًا','دعاء جميل نطلب به من الله أن يزيدنا علماً.'],['السلام','السَّلَامُ عَلَيْكُمْ','نحيّي الآخرين بالسلام وننشر المحبة.'],['آداب الطعام','آكل بيدي اليمنى وأقول بسم الله','أحافظ على النظافة ولا أسرف في الطعام.'],['بر الوالدين','أحترم والديّ وأساعدهما','الكلمة الطيبة والمساعدة من صور البر.']];
 const deeds=['أساعد في ترتيب البيت.','أشارك ألعابي وأكون لطيفاً.','أقول الصدق حتى عندما أخطئ.','أحافظ على نظافة المكان.','أستمع باحترام عندما يتحدث الآخرون.','أشكر من يقدم لي المساعدة.'];let ii=0;
