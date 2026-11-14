@@ -10,6 +10,8 @@ on:
       - 'manifest.webmanifest'
       - 'icon.svg'
       - '*.jpg'
+      - '*.png'
+      - 'audio/**'
       - 'package.json'
       - 'capacitor.config.json'
       - '.github/workflows/build-android.yml'
@@ -36,10 +38,17 @@ jobs:
           packages: 'platform-tools platforms;android-36 build-tools;36.0.0'
       - name: Install Capacitor
         run: npm install
+      - name: Download licensed human Arabic recording
+        run: |
+          mkdir -p audio
+          curl -fL --retry 3 "https://upload.wikimedia.org/wikipedia/commons/e/ef/Arabic_alphabet_%2831s%2C_80kbps%29.ogg" -o audio/arabic-alphabet.ogg
+          test -s audio/arabic-alphabet.ogg
       - name: Prepare offline web bundle
         run: |
           mkdir -p android-web
-          cp index.html games.html progress.js sw.js manifest.webmanifest icon.svg boy.jpg girl.jpg rabbit.jpg cat.jpg android-web/
+          cp index.html games.html progress.js sw.js manifest.webmanifest icon.svg boy.jpg girl.png rabbit.png cat.png android-web/
+          mkdir -p android-web/audio
+          cp audio/arabic-alphabet.ogg android-web/audio/
       - name: Generate Android project
         run: npx cap add android
       - name: Sync local web assets
