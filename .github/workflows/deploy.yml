@@ -21,6 +21,11 @@ jobs:
       - uses: actions/configure-pages@v5
         with:
           enablement: true
+      - name: Download licensed human Arabic recording
+        run: |
+          mkdir -p audio
+          curl -fL --retry 3 "https://upload.wikimedia.org/wikipedia/commons/e/ef/Arabic_alphabet_%2831s%2C_80kbps%29.ogg" -o audio/arabic-alphabet.ogg
+          test -s audio/arabic-alphabet.ogg
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
