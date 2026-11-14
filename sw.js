@@ -10,11 +10,18 @@ self.addEventListener('activate',event=>{
 self.addEventListener('fetch',event=>{
  if(event.request.method!=='GET')return;
  const url=new URL(event.request.url);
- if(url.origin!==self.location.origin&&url.href!=="https://upload.wikimedia.org/wikipedia/commons/e/ef/Arabic_alphabet_%2831s%2C_80kbps%29.ogg")return;
+ const alphabetAudio="https://upload.wikimedia.org/wikipedia/commons/e/ef/Arabic_alphabet_%2831s%2C_80kbps%29.ogg";
+ if(url.href===alphabetAudio){
+   event.respondWith((async()=>{
+     const cached=await caches.match(event.request);
+     if(cached)return cached;
+     try{const response=await fetch(event.request);if(response&&response.ok){const cache=await caches.open(CACHE);cache.put(event.request,response.clone()).catch(()=>{});}return response;}catch(error){return Response.error();}
+   })());
+   return;
+ }
+ if(url.origin!==self.location.origin)return;
  event.respondWith((async()=>{
    try{
-     const cachedAudio=await caches.match(event.request);
-     if(cachedAudio)return cachedAudio;
      const response=await fetch(event.request);
      if(response&&response.ok){
        const cache=await caches.open(CACHE);
