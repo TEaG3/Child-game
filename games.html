@@ -58,7 +58,7 @@ function finish(){if(game.done)return;game.done=true;let stars=Math.max(1,3-game
 function closeResult(){$('#result').hidden=true}
 $('#next').onclick=()=>{closeResult();let n=game.idx+1;if(n<TOTAL&&(S.unlockAll||n<S.unlocked))start(n);else openWorld(world)};
 $('#retry').onclick=()=>{closeResult();start(game.idx)};$('#resultHome').onclick=()=>{closeResult();openWorld(world)};
-$('#worldBack').onclick=()=>{renderWorlds();screen('homeScreen')};$('#gameBack').onclick=()=>openWorld(world);$('#home').onclick=()=>{location.href='./index.html'};$('#sound').onclick=()=>{snd=!snd;S.sound=snd;window.gameSoundEnabled=snd;save();$('#sound').textContent=snd?'🔊':'🔇'};
+$('#worldBack').onclick=()=>{renderWorlds();screen('homeScreen')};$('#gameBack').onclick=()=>openWorld(world);$('#home').onclick=()=>{location.href='./index.html'};$('#sound').onclick=()=>{snd=!snd;S.sound=snd;window.gameSoundEnabled=snd;save();$('#sound').textContent=snd?'🔊':'🔇';$('#sound').setAttribute('aria-label',snd?'إيقاف الصوت':'تشغيل الصوت')};$('#sound').textContent=snd?'🔊':'🔇';$('#sound').setAttribute('aria-label',snd?'إيقاف الصوت':'تشغيل الصوت');
 hud();renderWorlds();
 </script><script src="./game-audio.js" defer></script><script src="./voice-preferences.js" defer></script>
 </body></html>
