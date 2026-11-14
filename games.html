@@ -58,4 +58,5 @@ $('#next').onclick=()=>{closeResult();let n=game.idx+1;if(n<TOTAL&&(S.unlockAll|
 $('#retry').onclick=()=>{closeResult();start(game.idx)};$('#resultHome').onclick=()=>{closeResult();openWorld(world)};
 $('#worldBack').onclick=()=>{renderWorlds();screen('homeScreen')};$('#gameBack').onclick=()=>openWorld(world);$('#home').onclick=()=>{location.href='./index.html'};$('#sound').onclick=()=>{snd=!snd;S.sound=snd;save();$('#sound').textContent=snd?'🔊':'🔇'};
 hud();renderWorlds();
-</script></body></html>
+</script><script src="./voice-preferences.js" defer></script>
+</body></html>
