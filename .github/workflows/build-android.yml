@@ -6,6 +6,7 @@ on:
       - 'index.html'
       - 'games.html'
       - 'progress.js'
+      - 'voice-preferences.js'
       - 'sw.js'
       - 'manifest.webmanifest'
       - 'icon.svg'
@@ -46,7 +47,7 @@ jobs:
       - name: Prepare offline web bundle
         run: |
           mkdir -p android-web
-          cp index.html games.html progress.js sw.js manifest.webmanifest icon.svg boy.jpg girl.png rabbit.png cat.png android-web/
+          cp index.html games.html progress.js voice-preferences.js sw.js manifest.webmanifest icon.svg boy.jpg girl.png rabbit.png cat.png android-web/
           mkdir -p android-web/audio
           cp audio/arabic-alphabet.ogg android-web/audio/
       - name: Generate Android project
