@@ -19,7 +19,7 @@
   });
   window.playGameSound=function(name){
     const a=players[name];
-    if(!a)return;
+    if(!a||window.gameSoundEnabled===false)return;
     try{a.pause();a.currentTime=0;const p=a.play();if(p&&p.catch)p.catch(()=>{});}catch(e){}
   };
   document.addEventListener('click',function(e){
