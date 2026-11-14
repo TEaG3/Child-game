@@ -9,8 +9,8 @@
 @media(max-width:520px){.worlds{grid-template-columns:repeat(2,minmax(0,1fr))}.levels{grid-template-columns:repeat(6,1fr)}}
 </style></head>
 <body><div id="app">
-<header><div class="brand">🌙 رحلة المسلم الصغير — الألعاب</div><div class="stats"><span class="stat">🪙 <b id="coins">0</b></span><span class="stat">⭐ <b id="stars">0</b></span><button class="iconbtn" id="sound">🔊</button><button class="iconbtn" id="voice">🗣️</button><button class="iconbtn" id="home">⌂</button></div></header>
-<section id="homeScreen" class="screen on"><div class="hero"><h1>🎮 مغامرة المعرفة — 2000 مرحلة</h1><p>20 عالماً، في كل عالم 100 مرحلة. اقلب البطاقات وطابق الأزواج واجمع النجوم. تتدرج الصعوبة مع تقدمك!</p></div><div class="meter"><i id="overall" style="width:0%"></i></div><p class="hint" id="overallText">0% من الرحلة</p><div class="worlds" id="worlds"></div></section>
+<header><div class="brand">🌙 رحلة المسلم الصغير — الألعاب</div><div class="stats"><span class="stat">🪙 <b id="coins">0</b></span><span class="stat">⭐ <b id="stars">0</b></span><button class="iconbtn" id="sound">🔊</button><button class="iconbtn" id="voice" aria-label="تشغيل التسجيل البشري">🎧 صوت بشري</button><button class="iconbtn" id="home">⌂</button></div></header>
+<section id="homeScreen" class="screen on"><div class="hero"><h1>🎮 مغامرة المعرفة — 2000 مرحلة</h1><p>20 عالماً، في كل عالم 100 مرحلة. اقلب البطاقات وطابق الأزواج واجمع النجوم. تتدرج الصعوبة مع تقدمك!</p></div><div class="meter"><i id="overall" style="width:0%"></i></div><p class="hint" id="overallText">0% من الرحلة</p><section class="hero" aria-label="التسجيل الصوتي البشري"><h2>🎧 استمع إلى الأبجدية العربية بصوت بشري</h2><audio id="humanAlphabetAudio" controls preload="none" src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Arabic_alphabet_%2831s%2C_80kbps%29.ogg" style="width:100%"></audio><small>تسجيل لمتحدث مصري — المصدر: Wikimedia Commons، ضمن الملكية العامة.</small></section><div class="worlds" id="worlds"></div></section>
 <section id="levelScreen" class="screen"><div class="top"><button class="back" id="worldBack">↩ رجوع</button><div class="ttl" id="worldTitle"></div></div><div class="levels" id="levels"></div></section>
 <section id="gameScreen" class="screen"><div class="top"><button class="back" id="gameBack">↩</button><div class="ttl" id="gameTitle"></div><span id="gameStars">⭐⭐⭐</span></div><div class="prog"><i id="gameProg"></i></div><div class="coach"><div class="av">🐰</div><div class="coachTxt" id="coach">طابق البطاقات المتشابهة. اقلب بطاقتين في كل محاولة.</div></div><div id="gameBody"></div></section>
 </div>
@@ -35,7 +35,7 @@ function save(){localStorage.setItem(KEY,JSON.stringify(S));hud()}
 function countStars(){return Object.values(S.stars).reduce((a,b)=>a+b,0)}
 function hud(){ $('#coins').textContent=S.coins;$('#stars').textContent=countStars();let n=Object.keys(S.stars).length,p=Math.round(n/TOTAL*100);$('#overall').style.width=p+'%';$('#overallText').textContent=p+'% من الرحلة — '+n+' من '+TOTAL+' مرحلة'}
 function screen(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('on'));$('#'+id).classList.add('on')}
-function say(t){if(voice&&'speechSynthesis'in window){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang='ar-SA';u.rate=.9;speechSynthesis.speak(u)}}
+function say(t){const player=$('#humanAlphabetAudio');if(player){player.currentTime=0;player.play().catch(()=>{});}}
 function tone(f=650){if(!snd)return;try{let c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.frequency.value=f;o.connect(g);g.connect(c.destination);g.gain.value=.06;o.start();o.stop(c.currentTime+.09);o.onended=()=>c.close()}catch(e){}}
 function shuffle(a,r){a=a.slice();for(let i=a.length-1;i>0;i--){let j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function rng(seed){return()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}}
@@ -56,6 +56,6 @@ function finish(){if(game.done)return;game.done=true;let stars=Math.max(1,3-game
 function closeResult(){$('#result').hidden=true}
 $('#next').onclick=()=>{closeResult();let n=game.idx+1;if(n<TOTAL&&(S.unlockAll||n<S.unlocked))start(n);else openWorld(world)};
 $('#retry').onclick=()=>{closeResult();start(game.idx)};$('#resultHome').onclick=()=>{closeResult();openWorld(world)};
-$('#worldBack').onclick=()=>{renderWorlds();screen('homeScreen')};$('#gameBack').onclick=()=>openWorld(world);$('#home').onclick=()=>{location.href='./index.html'};$('#sound').onclick=()=>{snd=!snd;S.sound=snd;save();$('#sound').textContent=snd?'🔊':'🔇'};$('#voice').onclick=()=>{voice=!voice;S.voice=voice;save();$('#voice').textContent=voice?'🗣️✓':'🗣️';say('تم تغيير إعداد النطق')};
+$('#worldBack').onclick=()=>{renderWorlds();screen('homeScreen')};$('#gameBack').onclick=()=>openWorld(world);$('#home').onclick=()=>{location.href='./index.html'};$('#sound').onclick=()=>{snd=!snd;S.sound=snd;save();$('#sound').textContent=snd?'🔊':'🔇'};$('#voice').onclick=()=>{const player=$('#humanAlphabetAudio');if(player){player.scrollIntoView({behavior:'smooth',block:'center'});player.play().catch(()=>{});}};
 hud();renderWorlds();
 </script></body></html>
