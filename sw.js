@@ -1,6 +1,6 @@
 'use strict';
-const CACHE='little-muslim-v14';
-const FILES=['./','./index.html','./games.html','./progress.js','./manifest.webmanifest','./icon.svg','./boy.jpg','./girl.png','./rabbit.png','./cat.png','./girl.jpg','./rabbit.jpg','./cat.jpg','./sw.js','./audio/arabic-alphabet.ogg'];
+const CACHE='little-muslim-v15';
+const FILES=['./','./index.html','./games.html','./progress.js','./voice-preferences.js','./manifest.webmanifest','./icon.svg','./boy.jpg','./girl.png','./rabbit.png','./cat.png','./girl.jpg','./rabbit.jpg','./cat.jpg','./sw.js','./audio/arabic-alphabet.ogg'];
 self.addEventListener('install',event=>{
  event.waitUntil((async()=>{const cache=await caches.open(CACHE);const required=['./','./index.html','./games.html','./progress.js','./manifest.webmanifest','./sw.js'];await cache.addAll(required);await Promise.all(FILES.filter(file=>!required.includes(file)).map(file=>cache.add(file).catch(()=>null)));await self.skipWaiting()})());
 });
