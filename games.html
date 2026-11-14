@@ -31,7 +31,7 @@ math:[['٥ + ٣ = ؟','٨','🧮'],['١٠ − ٤ = ؟','٦','🧮'],['٢ × ٣ =
 logic:[['١ ٣ ٥ ٧ ؟','٩','🔢'],['٢ ٤ ٦ ٨ ؟','١٠','🔢'],['كيلو حديد = كيلو قطن؟','متساويان','⚖️']]
 };
 const W=[['حروف عربية','🔤','arL'],['أرقام عربية','🔢','arN'],['التوحيد','☝️','creed'],['حروف إنجليزية','🅰️','enL'],['أرقام إنجليزية','1️⃣','enN'],['أركان الإسلام','🕋','creed'],['أركان الإيمان','💫','creed'],['الأنبياء','🕌','creed'],['القرآن','📖','creed'],['الصلاة','🤲','salah'],['الأذكار','📿','adhkar'],['أسماء الله','🌟','names'],['الأخلاق','😊','akhlaq'],['الملائكة','👼','creed'],['اليوم الآخر','🌅','creed'],['حيوانات','🐘','arW'],['حساب','🧮','math'],['ذكاء','🧠','logic'],['مراجعة','🏆','mixed'],['التحدي','👑','mixed']].map(x=>({name:x[0],em:x[1],theme:x[2]}));
-const TOTAL=2000,PER=100,KEY='rkid-v8';let S={stars:{},coins:0,unlocked:1,sound:true,voice:false};try{S={...S,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){}let world=0,game=null,snd=S.sound!==false,voice=!!S.voice;
+const TOTAL=2000,PER=100,KEY='rkid-v8';let S={stars:{},coins:0,unlocked:1,sound:true,voice:false};try{S={...S,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){}let world=0,game=null,snd=S.sound!==false,voice=!!S.voice;window.gameSoundEnabled=snd;
 function save(){localStorage.setItem(KEY,JSON.stringify(S));hud()}
 function countStars(){return Object.values(S.stars).reduce((a,b)=>a+b,0)}
 function hud(){ $('#coins').textContent=S.coins;$('#stars').textContent=countStars();let n=Object.keys(S.stars).length,p=Math.round(n/TOTAL*100);$('#overall').style.width=p+'%';$('#overallText').textContent=p+'% من الرحلة — '+n+' من '+TOTAL+' مرحلة'}
