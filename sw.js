@@ -1,6 +1,6 @@
 'use strict';
-const CACHE='little-muslim-v19';
-const FILES=['./','./index.html','./games.html','./progress.js','./voice-preferences.js','./game-audio.js','./assets/audio/click.ogg','./assets/audio/correct.ogg','./assets/audio/incorrect.ogg','./assets/audio/sparkle.ogg','./assets/audio/reward.ogg','./assets/audio/transition.ogg','./assets/audio/open.ogg','./assets/audio/select.ogg','./manifest.webmanifest','./icon.svg','./boy.jpg','./girl.png','./rabbit.png','./cat.png','./girl.jpg','./rabbit.jpg','./cat.jpg','./sw.js','https://upload.wikimedia.org/wikipedia/commons/e/ef/Arabic_alphabet_%2831s%2C_80kbps%29.ogg'];
+const CACHE='little-muslim-v20';
+const FILES=['./','./index.html','./games.html','./progress.js','./voice-preferences.js','./game-audio.js','./assets/audio/click.ogg','./assets/audio/correct.ogg','./assets/audio/incorrect.ogg','./assets/audio/sparkle.ogg','./assets/audio/reward.ogg','./assets/audio/transition.ogg','./assets/audio/open.ogg','./assets/audio/select.ogg','./manifest.webmanifest','./icon.svg','./boy.jpg','./girl.png','./rabbit.png','./cat.png','./girl.jpg','./rabbit.jpg','./cat.jpg','./sw.js'];
 self.addEventListener('install',event=>{
  event.waitUntil((async()=>{const cache=await caches.open(CACHE);const required=['./','./index.html','./games.html','./progress.js','./voice-preferences.js','./game-audio.js','./assets/audio/click.ogg','./assets/audio/correct.ogg','./assets/audio/incorrect.ogg','./assets/audio/sparkle.ogg','./assets/audio/reward.ogg','./assets/audio/transition.ogg','./assets/audio/open.ogg','./assets/audio/select.ogg','./manifest.webmanifest','./sw.js'];await cache.addAll(required);await Promise.all(FILES.filter(file=>!required.includes(file)).map(file=>cache.add(file).catch(()=>null)));await self.skipWaiting()})());
 });
@@ -10,15 +10,6 @@ self.addEventListener('activate',event=>{
 self.addEventListener('fetch',event=>{
  if(event.request.method!=='GET')return;
  const url=new URL(event.request.url);
- const alphabetAudio="https://upload.wikimedia.org/wikipedia/commons/e/ef/Arabic_alphabet_%2831s%2C_80kbps%29.ogg";
- if(url.href===alphabetAudio){
-   event.respondWith((async()=>{
-     const cached=await caches.match(event.request);
-     if(cached)return cached;
-     try{const response=await fetch(event.request);if(response&&response.ok){const cache=await caches.open(CACHE);cache.put(event.request,response.clone()).catch(()=>{});}return response;}catch(error){return Response.error();}
-   })());
-   return;
- }
  if(url.origin!==self.location.origin)return;
  event.respondWith((async()=>{
    try{
