@@ -8,6 +8,7 @@ on:
       - 'progress.js'
       - 'voice-preferences.js'
       - 'game-audio.js'
+      - 'cinematic-fx.js'
       - 'assets/audio/**'
       - 'sw.js'
       - 'manifest.webmanifest'
@@ -44,7 +45,7 @@ jobs:
       - name: Prepare offline web bundle
         run: |
           mkdir -p android-web
-          cp index.html games.html progress.js voice-preferences.js game-audio.js sw.js manifest.webmanifest icon.svg boy.jpg girl.png rabbit.png cat.png android-web/
+          cp index.html games.html progress.js voice-preferences.js game-audio.js cinematic-fx.js sw.js manifest.webmanifest icon.svg boy.jpg girl.png rabbit.png cat.png android-web/
           mkdir -p android-web/assets/audio
           cp assets/audio/*.ogg assets/audio/LICENSE-KENNEY-CC0.txt android-web/assets/audio/
       - name: Generate Android project
