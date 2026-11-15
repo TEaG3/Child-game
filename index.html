@@ -186,40 +186,41 @@ $('startMemory').onclick=startMem;updateScore();if('serviceWorker'in navigator&&
 </script><script src="./progress.js"></script>
 <script>
 (()=> {
+ const home=document.getElementById('home');
  const chooser=document.getElementById('categoryChooser');
  const activities=document.getElementById('activityChooser');
  const heading=document.getElementById('categoryHeading');
  const education=document.getElementById('educationCategory');
  const games=document.getElementById('gamesCategory');
  const back=document.getElementById('categoryBack');
- const tiles=[...document.querySelectorAll('#home .tiles [data-open]')];
- const tools=document.querySelector('#home .extra-tools');
+ const tools=()=>document.querySelector('#home .extra-tools');
  function showCategories(){
-   document.getElementById('home').style.display='block';
-   document.querySelectorAll('.panel').forEach(panel=>panel.classList.remove('active'));
+   home.style.display='block';
+   document.querySelectorAll('main > .panel, main .panel').forEach(panel=>panel.classList.remove('active'));
+   const progress=document.getElementById('progressScreen');
+   if(progress) progress.classList.remove('active');
    chooser.hidden=false; activities.hidden=true;
-   tiles.forEach(tile=>tile.hidden=false);
-   if(tools) tools.hidden=false;
+   if(tools()) tools().hidden=false;
    window.scrollTo({top:0,behavior:'smooth'});
  }
  function showCategory(kind){
    if(kind==='games'){location.href='./games.html';return;}
+   home.style.display='block';
    chooser.hidden=true; activities.hidden=false;
    heading.textContent='📚 القسم التعليمي';
-   tiles.forEach(tile=>{ tile.hidden=false; });
-   if(tools) tools.hidden=true;
+   if(tools()) tools().hidden=true;
    window.scrollTo({top:0,behavior:'smooth'});
  }
- education.addEventListener('click',()=>showCategory('education'));
- games.addEventListener('click',()=>showCategory('games'));
- back.addEventListener('click',showCategories);
- document.querySelectorAll('.back:not(#categoryBack)').forEach(button=>{
-   button.addEventListener('click',()=>{showCategories()});
+ education?.addEventListener('click',()=>showCategory('education'));
+ games?.addEventListener('click',()=>showCategory('games'));
+ back?.addEventListener('click',showCategories);
+ document.querySelectorAll('.panel .back').forEach(button=>{
+   button.addEventListener('click',showCategories);
  });
- const homeButton=document.getElementById('homeBtn');
- if(homeButton) homeButton.addEventListener('click',showCategories);
+ document.getElementById('homeBtn')?.addEventListener('click',showCategories);
  showCategories();
 })();
 </script><script src="./game-audio.js" defer></script><script src="./voice-preferences.js" defer></script>
 <script src="./cinematic-fx.js" defer></script>
+<script src="./education-enhancements.js" defer></script>
 </body></html>
