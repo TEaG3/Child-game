@@ -286,9 +286,9 @@
     try {
       if (!('serviceWorker' in navigator) || !('caches' in window)) throw Error('المتصفح لا يدعم التخزين دون اتصال');
       await navigator.serviceWorker.ready;
-      const cache = await caches.open('little-muslim-v26');
+      const cache = await caches.open('little-muslim-v27');
       const files = [
-        './', './index.html', './games.html', './progress.js', './voice-preferences.js', './game-audio.js',
+        './', './index.html', './games.html', './progress.js', './education-enhancements.js', './voice-preferences.js', './game-audio.js',
         './assets/audio/click.ogg', './assets/audio/correct.ogg', './assets/audio/incorrect.ogg',
         './assets/audio/sparkle.ogg', './assets/audio/reward.ogg', './assets/audio/transition.ogg',
         './assets/audio/open.ogg', './assets/audio/select.ogg', './manifest.webmanifest', './icon.svg',
