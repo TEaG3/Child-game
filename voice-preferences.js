@@ -4,6 +4,35 @@ const labels={msa:'العربية الفصحى',iraqi:'اللهجة العراق
 function readLocale(){try{return localStorage.getItem(KEY)==='iraqi'?'iraqi':'msa'}catch(_){return 'msa'}}
 function writeLocale(value){try{localStorage.setItem(KEY,value)}catch(_){}}
 let locale=readLocale();
+function speakArabicText(text,rate=0.82){
+ return new Promise(resolve=>{
+  if(!('speechSynthesis'in window)||!('SpeechSynthesisUtterance'in window)){resolve(false);return;}
+  try{
+   window.speechSynthesis.cancel();
+   const u=new SpeechSynthesisUtterance(String(text||''));
+   u.lang=locale==='iraqi'?'ar-IQ':'ar-SA';u.rate=rate;u.pitch=1;u.volume=1;
+   const voices=window.speechSynthesis.getVoices();
+   const preferred=voices.find(v=>v.lang.toLowerCase()===(locale==='iraqi'?'ar-iq':'ar-sa'))||voices.find(v=>v.lang.toLowerCase().startsWith('ar'));
+   if(preferred)u.voice=preferred;
+   u.onend=()=>resolve(true);u.onerror=()=>resolve(false);
+   window.speechSynthesis.speak(u);
+  }catch(_){resolve(false);}
+ });
+}
+window.speakArabicText=speakArabicText;
+window.addEventListener('DOMContentLoaded',()=>{
+ const readBtn=document.getElementById('speakRead');
+ if(readBtn){
+  readBtn.disabled=false;readBtn.textContent='🔊 استمع للكلمة';readBtn.removeAttribute('title');
+  readBtn.onclick=()=>{if(window.gameSoundEnabled===false)return;const word=document.getElementById('readWord')?.textContent;if(word)speakArabicText(word,0.75);};
+ }
+ const islamBtn=document.getElementById('speakIslam');
+ if(islamBtn){
+  islamBtn.disabled=false;islamBtn.textContent='🔊 استمع للذكر';islamBtn.removeAttribute('title');
+  islamBtn.onclick=()=>{if(window.gameSoundEnabled===false)return;const dua=document.getElementById('islamText')?.textContent;if(dua)speakArabicText(dua,0.8);};
+ }
+});
+
 const style=document.createElement('style');style.textContent='#voiceSettingsBtn{border:1px solid #ffffff66;background:#ffffff20;color:inherit;border-radius:12px;padding:9px 11px;font:inherit;font-weight:bold;cursor:pointer}#voiceSettingsPanel{position:fixed;inset:0;background:#102c2188;z-index:9999;display:none;place-items:center;padding:16px}#voiceSettingsPanel.open{display:grid}#voiceSettingsPanel .voice-card{width:min(420px,100%);background:#fff;color:#183b35;border-radius:20px;padding:20px;box-shadow:0 12px 40px #0003}#voiceSettingsPanel h2{margin-top:0;color:#145b48}#voiceSettingsPanel label{display:flex;gap:10px;align-items:center;padding:12px;background:#f0f8f2;border-radius:12px;margin:8px 0;cursor:pointer}#voiceSettingsPanel input{accent-color:#145b48;width:18px;height:18px}#voiceSettingsPanel .voice-note{line-height:1.8;background:#fff5dc;padding:11px;border-radius:12px;font-size:13px;margin-top:12px}#voiceSettingsPanel .voice-actions{display:flex;gap:8px;margin-top:14px}#voiceSettingsPanel button{border:0;border-radius:12px;padding:11px 14px;font:inherit;font-weight:bold;cursor:pointer}#voiceSettingsPanel .save{background:#145b48;color:white}#voiceSettingsPanel .close{background:#edf5ef;color:#145b48}';
 style.textContent+='@media(max-width:520px){#voiceSettingsBtn{font-size:11px;padding:8px 7px;white-space:nowrap}header .top-actions{flex-wrap:wrap;justify-content:flex-end}header{flex-wrap:wrap}}';
 document.head.appendChild(style);
