@@ -18,7 +18,7 @@
     'body>header,body>main,body>#app,body>section,body>footer{position:relative;z-index:1}header{z-index:5}',
     '.tile,.category-card,.world,.primary,.secondary,.choice,.letter,.back,.btn,.iconbtn{transform:translateZ(0);transition:transform .22s cubic-bezier(.2,.8,.2,1),box-shadow .22s ease,filter .22s ease}',
     '.tile,.category-card,.world,.primary,.secondary,.choice,.btn{box-shadow:0 5px 0 #145b4826,0 11px 22px #145b4819}',
-    '.tile,.category-card,.world{overflow:hidden}',
+    '.tile,.category-card,.world,.hero{position:relative;overflow:hidden}',
     '.tile:after,.category-card:after,.hero:after{content:"";position:absolute;top:-20%;left:-130%;width:55%;height:140%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.52),transparent);transform:skewX(-24deg);pointer-events:none;animation:lmShimmer 8s ease-in-out infinite}',
     '@keyframes lmShimmer{0%,72%{left:-130%}100%{left:160%}}',
     '.tile:hover,.category-card:hover,.world:hover{transform:translateY(-4px) scale(1.012);box-shadow:0 9px 0 #145b4826,0 18px 28px #145b4825}',
