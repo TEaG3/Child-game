@@ -34,7 +34,15 @@ const W=[['حروف عربية','🔤','arL'],['أرقام عربية','🔢','a
 const TOTAL=2000,PER=100,KEY='rkid-v8';let S={stars:{},coins:0,unlocked:1,sound:true,voice:false};try{S={...S,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){}let world=0,game=null,snd=S.sound!==false,voice=!!S.voice;window.gameSoundEnabled=snd;
 function save(){localStorage.setItem(KEY,JSON.stringify(S));hud()}
 function countStars(){return Object.values(S.stars).reduce((a,b)=>a+b,0)}
-function hud(){ $('#coins').textContent=S.coins;$('#stars').textContent=countStars();let n=Object.keys(S.stars).length,p=Math.round(n/TOTAL*100);$('#overall').style.width=p+'%';$('#overallText').textContent=p+'% من الرحلة — '+n+' من '+TOTAL+' مرحلة'}
+function hud(){
+ $('#coins').textContent=S.coins;
+ let educationStars=Number(localStorage.getItem('littleMuslimStars')||0);
+ if(!Number.isFinite(educationStars))educationStars=0;
+ $('#stars').textContent=countStars()+educationStars;
+ let n=Object.keys(S.stars).length,p=Math.round(n/TOTAL*100);
+ $('#overall').style.width=p+'%';
+ $('#overallText').textContent=p+'% من الرحلة — '+n+' من '+TOTAL+' مرحلة';
+}
 function screen(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('on'));$('#'+id).classList.add('on')}
 function say(t){if(typeof window.speakArabicLetter==='function'){const i=AR.indexOf(t);if(i>=0)window.speakArabicLetter(t);}}
 function celebrate(){if(snd&&window.playGameSound)window.playGameSound('sparkle');if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='success-sparkles';layer.setAttribute('aria-hidden','true');const icons=['⭐','✨','🌟','✦','💫'];for(let i=0;i<22;i++){const s=document.createElement('i');s.textContent=icons[i%icons.length];s.style.setProperty('--x',(8+Math.random()*84)+'vw');s.style.setProperty('--y',(18+Math.random()*62)+'vh');s.style.setProperty('--dx',((Math.random()-.5)*150)+'px');s.style.setProperty('--dy',(-40-Math.random()*180)+'px');s.style.setProperty('--size',(14+Math.random()*18)+'px');s.style.animationDelay=(Math.random()*140)+'ms';layer.appendChild(s)}document.body.appendChild(layer);setTimeout(()=>layer.remove(),1200)}
