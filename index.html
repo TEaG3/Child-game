@@ -143,7 +143,7 @@ function drawGuideLetter(){
  ctx.lineWidth=14;
  ctx.lineCap='round';
  ctx.lineJoin='round';
- ctx.strokeStyle='#145b48';
+ const magicBrush=ctx.createLinearGradient(0,0,pad.width,pad.height);magicBrush.addColorStop(0,'#16a879');magicBrush.addColorStop(.5,'#24c9b5');magicBrush.addColorStop(1,'#d6a83e');ctx.strokeStyle=magicBrush;ctx.shadowColor='rgba(30,190,150,.65)';ctx.shadowBlur=16;
  strokeCount=0;
 }
 function pos(e){
