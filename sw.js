@@ -1,5 +1,5 @@
 'use strict';
-const CACHE='little-muslim-v18';
+const CACHE='little-muslim-v19';
 const FILES=['./','./index.html','./games.html','./progress.js','./voice-preferences.js','./game-audio.js','./assets/audio/click.ogg','./assets/audio/correct.ogg','./assets/audio/incorrect.ogg','./assets/audio/sparkle.ogg','./assets/audio/reward.ogg','./assets/audio/transition.ogg','./assets/audio/open.ogg','./assets/audio/select.ogg','./manifest.webmanifest','./icon.svg','./boy.jpg','./girl.png','./rabbit.png','./cat.png','./girl.jpg','./rabbit.jpg','./cat.jpg','./sw.js','https://upload.wikimedia.org/wikipedia/commons/e/ef/Arabic_alphabet_%2831s%2C_80kbps%29.ogg'];
 self.addEventListener('install',event=>{
  event.waitUntil((async()=>{const cache=await caches.open(CACHE);const required=['./','./index.html','./games.html','./progress.js','./voice-preferences.js','./game-audio.js','./assets/audio/click.ogg','./assets/audio/correct.ogg','./assets/audio/incorrect.ogg','./assets/audio/sparkle.ogg','./assets/audio/reward.ogg','./assets/audio/transition.ogg','./assets/audio/open.ogg','./assets/audio/select.ogg','./manifest.webmanifest','./sw.js'];await cache.addAll(required);await Promise.all(FILES.filter(file=>!required.includes(file)).map(file=>cache.add(file).catch(()=>null)));await self.skipWaiting()})());
