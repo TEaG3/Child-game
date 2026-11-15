@@ -50,7 +50,7 @@ footer{text-align:center;color:#678078;font-size:12px;margin:28px 0 10px;line-he
 </div>
 </div>
 <div id="activityChooser" hidden>
-<div class="section-title"><h2 id="categoryHeading">أنشطة الرحلة</h2><button class="back" id="categoryBack">العودة للاختيار ←</button></div><h2>اختر مغامرتك</h2><small>ستجد نشاطاً جديداً كل مرة</small></div>
+<div class="section-title"><h2 id="categoryHeading">أنشطة الرحلة</h2><button class="back" id="categoryBack">العودة للاختيار ←</button></div>
 <div class="tiles">
 <button class="tile t1" data-open="letters"><span class="emoji">🔤</span><b>مدينة الحروف</b><small>تعرف إلى الحروف وأصواتها وكلماتها</small></button>
 <button class="tile t2" data-open="reading"><span class="emoji">📖</span><b>حديقة القراءة</b><small>اقرأ كلمات وجملاً قصيرة</small></button>
@@ -69,7 +69,15 @@ footer{text-align:center;color:#678078;font-size:12px;margin:28px 0 10px;line-he
 </main>
 <script>
 const $=id=>document.getElementById(id);let points=Number(localStorage.getItem('littleMuslimStars')||0),soundOn=localStorage.getItem('littleMuslimSound')!=='off';window.gameSoundEnabled=soundOn;
-function updateScore(){ $('score').textContent=points+' ⭐';$('progressBar').style.width=Math.min(100,points*2)+'%';localStorage.setItem('littleMuslimStars',points)}
+function updateScore(){
+ let gameData={};
+ try{gameData=JSON.parse(localStorage.getItem('rkid-v8')||'{}')}catch(e){}
+ const gameStars=Object.values(gameData.stars||{}).reduce((a,b)=>a+(Number(b)||0),0);
+ const totalStars=points+gameStars;
+ $('score').textContent=totalStars+' ⭐';
+ $('progressBar').style.width=Math.min(100,totalStars)+'%';
+ localStorage.setItem('littleMuslimStars',points);
+}
 function tone(freq=660){if(!soundOn||!window.playGameSound)return;const key=freq>=1050?'reward':freq>=850?'correct':freq<=300?'incorrect':freq>=500?'select':'click';window.playGameSound(key)}
 function playAlphabetAudio(){const item=alphabet.find(x=>x[0]===$('chosenLetter').textContent);if(!item)return;if(!soundOn){$('letterVoiceStatus').textContent='فعّل الصوت أولاً من زر الصوت أعلى الصفحة.';return;}if(typeof window.speakArabicLetter!=='function'){$('letterVoiceStatus').textContent='النطق غير مدعوم في هذا المتصفح.';return;}window.speakArabicLetter(item[0]).then(ok=>{$('letterVoiceStatus').textContent=ok?'يُنطق الآن: '+item[0]+' — '+item[1]:'تعذر تشغيل الصوت على هذا الجهاز.'})}
 function celebrate(){if(soundOn&&window.playGameSound)window.playGameSound('sparkle');if(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;const layer=document.createElement('div');layer.className='success-sparkles';layer.setAttribute('aria-hidden','true');const icons=['⭐','✨','🌟','✦','💫'];for(let i=0;i<22;i++){const s=document.createElement('i');s.textContent=icons[i%icons.length];s.style.setProperty('--x',(8+Math.random()*84)+'vw');s.style.setProperty('--y',(18+Math.random()*62)+'vh');s.style.setProperty('--dx',((Math.random()-.5)*150)+'px');s.style.setProperty('--dy',(-40-Math.random()*180)+'px');s.style.setProperty('--size',(14+Math.random()*18)+'px');s.style.animationDelay=(Math.random()*140)+'ms';layer.appendChild(s)}document.body.appendChild(layer);setTimeout(()=>layer.remove(),1200)}
@@ -120,10 +128,57 @@ const islamItems=[['ذكر عند البدء','بِسْمِ الله','نقول�
 const deeds=['أساعد في ترتيب البيت.','أشارك ألعابي وأكون لطيفاً.','أقول الصدق حتى عندما أخطئ.','أحافظ على نظافة المكان.','أستمع باحترام عندما يتحدث الآخرون.','أشكر من يقدم لي المساعدة.'];let ii=0;
 function showIslam(){let x=islamItems[ii%islamItems.length];$('islamType').textContent=x[0];$('islamText').textContent=x[1];$('islamExplain').textContent=x[2]}
 $('nextIslam').onclick=()=>{ii++;showIslam();reward()};$('newDeed').onclick=()=>{$('goodDeed').textContent=deeds[Math.floor(Math.random()*deeds.length)];tone(700)};showIslam();
-const pad=$('drawPad'),ctx=pad.getContext('2d');ctx.lineWidth=13;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#17644c';let drawing=false;
-function pos(e){let r=pad.getBoundingClientRect();return{x:(e.clientX-r.left)*pad.width/r.width,y:(e.clientY-r.top)*pad.height/r.height}}
-pad.addEventListener('pointerdown',e=>{drawing=true;pad.setPointerCapture(e.pointerId);let p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)});pad.addEventListener('pointermove',e=>{if(!drawing)return;let p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke()});['pointerup','pointercancel'].forEach(ev=>pad.addEventListener(ev,()=>drawing=false));
-$('clearPad').onclick=()=>ctx.clearRect(0,0,pad.width,pad.height);$('newWrite').onclick=()=>{$('writeTarget').textContent=alphabet[Math.floor(Math.random()*alphabet.length)][0];ctx.clearRect(0,0,pad.width,pad.height);tone(650)};
+const pad=$('drawPad'),ctx=pad.getContext('2d');
+let drawing=false,strokeCount=0;
+function drawGuideLetter(){
+ ctx.clearRect(0,0,pad.width,pad.height);
+ const letter=$('writeTarget').textContent;
+ ctx.save();
+ ctx.font='bold 260px Tahoma, Arial, sans-serif';
+ ctx.fillStyle='#e5efe9';
+ ctx.textAlign='center';
+ ctx.textBaseline='middle';
+ ctx.fillText(letter,pad.width/2,pad.height/2+15);
+ ctx.restore();
+ ctx.lineWidth=14;
+ ctx.lineCap='round';
+ ctx.lineJoin='round';
+ ctx.strokeStyle='#145b48';
+ strokeCount=0;
+}
+function pos(e){
+ const r=pad.getBoundingClientRect();
+ return{x:(e.clientX-r.left)*pad.width/r.width,y:(e.clientY-r.top)*pad.height/r.height};
+}
+pad.addEventListener('pointerdown',e=>{
+ drawing=true;strokeCount=0;
+ pad.setPointerCapture(e.pointerId);
+ const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);
+});
+pad.addEventListener('pointermove',e=>{
+ if(!drawing)return;
+ const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();strokeCount++;
+});
+['pointerup','pointercancel','lostpointercapture'].forEach(ev=>pad.addEventListener(ev,()=>{
+ if(drawing&&strokeCount>15&&!pad.dataset.rewarded){
+  pad.dataset.rewarded='1';
+  reward();
+  coachFeedback(true,'خط جميل جداً! واصل التدريب أو انتقل لحرف آخر.');
+  if(window.recordActivityProgress)window.recordActivityProgress('writing');
+ }
+ drawing=false;
+}));
+$('clearPad').onclick=()=>{
+ delete pad.dataset.rewarded;
+ drawGuideLetter();
+};
+$('newWrite').onclick=()=>{
+ $('writeTarget').textContent=alphabet[Math.floor(Math.random()*alphabet.length)][0];
+ delete pad.dataset.rewarded;
+ drawGuideLetter();
+ tone(650);
+};
+drawGuideLetter();
 const symbols=['⭐','🍎','🚀','🐠','🌙','⚽','🌻','🧸','🍉'];let memCorrect='';
 function resetMemory(){$('memorySymbols').textContent='⭐ 🍎 🚀';$('memoryPrompt').textContent='اضغط ابدأ التحدي عندما تكون مستعداً.';$('memoryChoices').innerHTML='';$('memoryFeedback').textContent=''}
 function startMem(){let shown=[...symbols].sort(()=>Math.random()-.5).slice(0,4);memCorrect=shown[Math.floor(Math.random()*shown.length)];$('memorySymbols').textContent=shown.join('   ');$('memoryPrompt').textContent='احفظ الرموز...';$('memoryChoices').innerHTML='';setTimeout(()=>{$('memorySymbols').textContent='❔ ❔ ❔ ❔';$('memoryPrompt').textContent='أي رمز كان موجوداً؟';const choices=[memCorrect,...symbols.filter(s=>s!==memCorrect).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);$('memoryChoices').innerHTML=choices.map(s=>'<button class="choice">'+s+'</button>').join('');document.querySelectorAll('#memoryChoices .choice').forEach(b=>b.onclick=()=>{if(b.disabled)return;if(b.textContent===memCorrect){document.querySelectorAll('#memoryChoices .choice').forEach(x=>x.disabled=true);$('memoryFeedback').textContent='ذاكرة قوية! أحسنت 🌟';b.classList.add('correct');coachFeedback(true,'ذاكرتك تتحسن بالتدريب!');reward()}else{b.disabled=true;$('memoryFeedback').textContent='حاول مرة ثانية، التدريب يقوّي الذاكرة.';coachFeedback(false,'تذكّر الرموز التي شاهدتها، وخذ وقتك في التفكير.');tone(220,.2)}})},2600)}
@@ -148,12 +203,8 @@ $('startMemory').onclick=startMem;updateScore();if('serviceWorker'in navigator&&
  function showCategory(kind){
    if(kind==='games'){location.href='./games.html';return;}
    chooser.hidden=true; activities.hidden=false;
-   const isEducation=kind==='education';
-   heading.textContent=isEducation?'📚 القسم التعليمي':'🎮 قسم الألعاب';
-   tiles.forEach(tile=>{
-     const id=tile.dataset.open;
-     tile.hidden=isEducation ? id==='memory' : id!=='memory';
-   });
+   heading.textContent='📚 القسم التعليمي';
+   tiles.forEach(tile=>{ tile.hidden=false; });
    if(tools) tools.hidden=true;
    window.scrollTo({top:0,behavior:'smooth'});
  }
