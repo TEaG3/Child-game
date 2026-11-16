@@ -44,6 +44,15 @@ footer{text-align:center;color:#678078;font-size:12px;margin:28px 0 10px;line-he
 @keyframes characterArrive{0%{opacity:.35;transform:translateZ(-20px) rotateY(35deg) scale(.86)}100%{opacity:1;transform:translateZ(24px) rotateY(0) scale(1)}}
 .coach-name{display:inline-block;color:#12533f;background:linear-gradient(135deg,#fff4cf,#ffe5a0);border:1px solid #e8c66c;border-radius:999px;padding:4px 13px;margin:0 0 7px;font-weight:900;box-shadow:0 3px 0 #c69b3a44}
 @media(prefers-reduced-motion:reduce){.character-coach #coachImg.character-enter{animation:none}.mascots img:hover{transform:none}}
+
+/* Wider TV support, including remotes and large screens with varied resolutions. */
+@media (min-width:960px) and (orientation:landscape){
+ body{font-size:clamp(17px,1.15vw,25px)}
+ main{max-width:1600px}
+ button,a,[role="button"],.tile,.category-card{cursor:pointer}
+ button:focus,a:focus,[role="button"]:focus,.tile:focus,.category-card:focus{outline:5px solid #e69b00!important;outline-offset:5px!important;box-shadow:0 0 0 3px #fff!important}
+}
+@media (hover:none) and (pointer:coarse) and (min-width:800px){button,a,[role="button"],.tile,.category-card{min-height:54px}}
 </style></head>
 <body>
 <header><div class="brand"><span class="moon">🌙</span><div><h1>رحلة المسلم الصغير</h1><small>نتعلّم، نلعب، ونكبر بالعلم والأخلاق</small></div></div><div class="top-actions"><button class="round" id="soundBtn" aria-label="تشغيل الصوت">🔊</button><button class="round" id="homeBtn" aria-label="الرئيسية">⌂</button><a class="download-app" href="https://github.com/TEaG3/Child-game/releases/download/android-latest/app-debug.apk" aria-label="تحميل تطبيق أندرويد">⬇ تحميل التطبيق</a></div></header>
@@ -431,49 +440,106 @@ button,a,[tabindex]{scroll-margin:90px}
 })();
 </script>
 <script>
-/* Android TV / TV Box remote navigation (D-pad, OK, Back). */
-(()=>{
- const selector='button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
- const visible=el=>!!(el.offsetWidth||el.offsetHeight||el.getClientRects().length) && getComputedStyle(el).visibility!=='hidden';
- const items=()=>[...document.querySelectorAll(selector)].filter(el=>visible(el)&&!el.closest('[hidden],[inert]'));
- const center=el=>{const r=el.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2};};
- const focusFirst=()=>{const all=items();if(!all.length)return;const target=all.find(x=>x.matches('#homeBtn,#home,#soundBtn,#sound,.tile,.category-card'))||all[0];target.focus({preventScroll:true});target.scrollIntoView({block:'nearest',inline:'nearest'});};
- const move=dir=>{
-  const all=items();if(!all.length)return;
-  let current=document.activeElement;
-  if(!all.includes(current)){focusFirst();return;}
-  const a=center(current);
-  const candidates=all.filter(el=>el!==current).map(el=>({el,p:center(el)})).map(o=>{
-   const dx=o.p.x-a.x,dy=o.p.y-a.y;
-   const primary=dir==='right'?dx:dir==='left'?-dx:dir==='down'?dy:-dy;
-   const secondary=Math.abs(dir==='right'||dir==='left'?dy:dx);
-   return {...o,primary,score:primary>2?primary+secondary*2.4:Infinity};
-  }).filter(o=>Number.isFinite(o.score)).sort((x,y)=>x.score-y.score);
-  if(candidates.length){candidates[0].el.focus({preventScroll:true});candidates[0].el.scrollIntoView({block:'nearest',inline:'nearest'});}
-  else {
-   const wrap=all.filter(el=>el!==current).sort((x,y)=>{
-    const a=center(x),b=center(y);
-    return dir==='right'?a.x-b.x:dir==='left'?b.x-a.x:dir==='down'?a.y-b.y:b.y-a.y;
-   });
-   wrap[0]?.focus({preventScroll:true});wrap[0]?.scrollIntoView({block:'nearest',inline:'nearest'});
+/* TV / TV Box remote navigation: support Android, Samsung/LG-style key codes and browser keys. */
+(function(){
+ 'use strict';
+ var selector='button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+ function visible(el){
+  if(!el)return false;
+  var style=window.getComputedStyle?window.getComputedStyle(el):null;
+  return !!(el.offsetWidth||el.offsetHeight||(el.getClientRects&&el.getClientRects().length)) && (!style||style.visibility!=='hidden') && !el.disabled;
+ }
+ function closestHidden(el){
+  while(el&&el!==document){
+   if(el.hidden||el.getAttribute&&el.getAttribute('aria-hidden')==='true')return true;
+   el=el.parentNode;
   }
- };
- const goBack=()=>{
-  const back=document.querySelector('#categoryBack,.back, #homeBtn, #home');
-  if(back&&visible(back)){back.click();return;}
-  const home=document.querySelector('#homeBtn,#home');if(home){home.click();return;}
-  if(history.length>1)history.back();
- };
- document.addEventListener('keydown',e=>{
-  const tag=(e.target?.tagName||'').toLowerCase();
-  if(['input','textarea','select'].includes(tag)&&!['Escape','Backspace','BrowserBack'].includes(e.key))return;
-  const map={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};
-  if(map[e.key]){e.preventDefault();move(map[e.key]);return;}
-  if(e.key==='Escape'||e.key==='Backspace'||e.key==='BrowserBack'||e.key==='GoBack'||e.keyCode===4){e.preventDefault();goBack();}
+  return false;
+ }
+ function items(){
+  var all=document.querySelectorAll(selector),out=[];
+  for(var i=0;i<all.length;i++)if(visible(all[i])&&!closestHidden(all[i]))out.push(all[i]);
+  return out;
+ }
+ function center(el){
+  var r=el.getBoundingClientRect();
+  return {x:r.left+r.width/2,y:r.top+r.height/2};
+ }
+ function focus(el){
+  if(!el)return;
+  try{el.focus();}catch(e){}
+  try{el.scrollIntoView({block:'nearest',inline:'nearest'});}catch(e){try{el.scrollIntoView(false);}catch(ignore){}}
+ }
+ function focusFirst(){
+  var all=items();if(!all.length)return;
+  var preferred=document.querySelector('#homeBtn,#home,#soundBtn,.tile,.category-card');
+  if(!preferred||!visible(preferred)||closestHidden(preferred))preferred=all[0];
+  focus(preferred);
+ }
+ function move(dir){
+  var all=items();if(!all.length)return;
+  var current=document.activeElement,found=false;
+  for(var i=0;i<all.length;i++)if(all[i]===current)found=true;
+  if(!found){focusFirst();return;}
+  var a=center(current),best=null,bestScore=Infinity;
+  for(var j=0;j<all.length;j++){
+   var el=all[j];if(el===current)continue;
+   var p=center(el),dx=p.x-a.x,dy=p.y-a.y;
+   var primary=dir==='right'?dx:dir==='left'?-dx:dir==='down'?dy:-dy;
+   var secondary=Math.abs(dir==='right'||dir==='left'?dy:dx);
+   var score=primary>2?primary+secondary*2.4:Infinity;
+   if(score<bestScore){best=el;bestScore=score;}
+  }
+  if(best){focus(best);return;}
+  var edge=null,edgeValue=dir==='right'||dir==='down'?-Infinity:Infinity;
+  for(var k=0;k<all.length;k++){
+   var candidate=all[k];if(candidate===current)continue;
+   var q=center(candidate),v=dir==='right'?q.x:dir==='left'?q.x:dir==='down'?q.y:q.y;
+   if((dir==='right'||dir==='down')?v>edgeValue:v<edgeValue){edge=candidate;edgeValue=v;}
+  }
+  focus(edge);
+ }
+ function goBack(){
+  var back=document.querySelector('#categoryBack,.back');
+  if(back&&visible(back)&&!closestHidden(back)){back.click();return;}
+  var home=document.querySelector('#homeBtn,#home');
+  if(home&&visible(home)){home.click();return;}
+  if(window.history&&history.length>1)history.back();
+ }
+ function keyHandler(e){
+  e=e||window.event;
+  var code=e.which||e.keyCode||0,key=e.key||'';
+  var map={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};
+  if(code===19)map.up='up';
+  if(code===20)map.down='down';
+  if(code===21)map.left='left';
+  if(code===22)map.right='right';
+  var direction=map[key]||(code===19?'up':code===20?'down':code===21?'left':code===22?'right':null);
+  var tag=(e.target&&e.target.tagName||'').toLowerCase();
+  if(direction){
+   if(e.preventDefault)e.preventDefault();
+   e.returnValue=false;move(direction);return false;
+  }
+  if(code===4||code===27||code=== BrowserBackCode()||key==='Escape'||key==='Backspace'||key==='BrowserBack'||key==='GoBack'){
+   if(e.preventDefault)e.preventDefault();e.returnValue=false;goBack();return false;
+  }
+  /* OK/Enter: focusable elements retain their native click/activation behavior. */
+  if((code===23||code===66||code===13||key==='Enter'||key===' ' )&&(!e.target||e.target===document.body)){
+   var active=document.activeElement;
+   if(active&&active!==document.body&&typeof active.click==='function'){active.click();if(e.preventDefault)e.preventDefault();return false;}
+   focusFirst();
+  }
+ }
+ function BrowserBackCode(){return 10009;}
+ if(document.addEventListener)document.addEventListener('keydown',keyHandler,true);
+ else if(document.attachEvent)document.attachEvent('onkeydown',keyHandler);
+ if(document.addEventListener)document.addEventListener('focusin',function(e){if(e.target&&e.target.matches&&e.target.matches(selector))focus(e.target);});
+ function init(){setTimeout(focusFirst,400);}
+ if(window.addEventListener)window.addEventListener('load',init);else if(window.attachEvent)window.attachEvent('onload',init);
+ if(document.addEventListener)document.addEventListener('click',function(e){
+  var t=e.target;
+  while(t&&t!==document){if(t.matches&&t.matches('.tile,.category-card,[data-open]')){setTimeout(focusFirst,200);break;}t=t.parentNode;}
  });
- document.addEventListener('focusin',e=>{if(e.target.matches(selector))e.target.scrollIntoView({block:'nearest',inline:'nearest'});});
- window.addEventListener('load',()=>setTimeout(focusFirst,250));
- document.addEventListener('click',e=>{if(e.target.closest('.tile,.category-card,[data-open]'))setTimeout(focusFirst,180);});
 })();
 </script>
 <script src="./character-rotation.js" defer></script>
