@@ -8,6 +8,21 @@
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(160deg,#e9fff3,#f7fbff 48%,#fff5dc);font-family:Tahoma,Arial,sans-serif;color:#183b35}#app{max-width:900px;margin:auto;padding:12px;min-height:100vh}header{background:#145b48;color:#fff;padding:12px 14px;border-radius:18px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;box-shadow:0 12px 32px #164b3920}.brand{font-weight:900}.stats{display:flex;gap:7px;align-items:center}.stat{background:#ffd47a;color:#4a3500;padding:6px 10px;border-radius:12px;font-weight:900}.iconbtn,.back{border:0;border-radius:12px;padding:9px 13px;cursor:pointer;font-weight:900}.iconbtn{background:#ffffff25;color:#fff}.screen{display:none;padding-top:14px}.screen.on{display:block;animation:in .25s}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.hero,.coach,.world,.result{background:#fff;border:2px solid white;border-radius:20px;padding:15px;box-shadow:0 8px 20px #164b3920}.hero{text-align:center;margin-bottom:13px;background:linear-gradient(120deg,#fff,#e8fff1)}h1{font-size:1.35rem;color:#12533f;margin:5px}.hero p,.hint{line-height:1.8;color:#526d62}.worlds{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}.world{cursor:pointer;color:inherit;font:inherit;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}.world:disabled{opacity:.45;cursor:not-allowed}.world .em{font-size:2rem}.meter{height:6px;background:#e7eee9;border-radius:8px;width:100%;overflow:hidden}.meter i{display:block;height:100%;background:linear-gradient(90deg,#36b77c,#ffc857)}.top{display:flex;align-items:center;gap:9px;margin-bottom:12px}.back{background:#edf5ef;color:#145b48}.ttl{font-weight:900;flex:1;text-align:center}.levels{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:6px;max-height:65vh;overflow:auto}.lv{aspect-ratio:1;border:2px solid #d7eae0;border-radius:11px;background:#fff;font-weight:900;color:#183b35}.lv.done{background:#c8f0c3}.lv.cur{background:#ffd47a}.lv:disabled{opacity:.35}.coach{display:flex;gap:10px;align-items:center;margin:12px 0;border-color:#d9f0e2}.av{width:48px;height:48px;border-radius:50%;background:#f0fbf4;display:grid;place-items:center;font-size:28px}.coachTxt{font-weight:bold;line-height:1.7}.grid{display:grid;gap:8px;max-width:560px;margin:auto}.card{aspect-ratio:1;border:0;background:transparent;padding:0;perspective:900px;cursor:pointer}.inner{height:100%;position:relative;transform-style:preserve-3d;transition:transform .45s}.card.flip .inner,.card.match .inner{transform:rotateY(180deg)}.face{position:absolute;inset:0;display:grid;place-items:center;text-align:center;border:3px solid #ffc857;border-radius:14px;padding:5px;font-weight:900;font-size:clamp(15px,3vw,24px);backface-visibility:hidden;word-break:break-word}.front{background:linear-gradient(145deg,#36b77c,#145b48);color:#ffd47a}.backface{background:#fff2c9;color:#145b48;transform:rotateY(180deg)}.match .backface{background:#c8f0c3;border-color:#4caf50}.prog{height:9px;background:#e0ece4;border-radius:9px;overflow:hidden;margin:8px 0 14px}.prog i{display:block;height:100%;background:linear-gradient(90deg,#36b77c,#ffc857);width:0}.overlay{position:fixed;inset:0;background:#0a2819dd;display:grid;place-items:center;padding:14px;z-index:5}.overlay[hidden]{display:none}.result{max-width:380px;width:100%;text-align:center;border:4px solid #ffc857;padding:22px}.result .big{font-size:42px}.btn{display:block;width:100%;margin:8px 0;padding:12px;border:0;border-radius:12px;background:#145b48;color:#fff;font-weight:900;cursor:pointer}.btn.alt{background:#fff0c9;color:#694d0b}
 @media(max-width:900px){header{flex-wrap:wrap;gap:8px}.stats{flex-wrap:wrap;justify-content:flex-end}}@media(max-width:520px){.worlds{grid-template-columns:repeat(2,minmax(0,1fr))}.levels{grid-template-columns:repeat(5,minmax(0,1fr))}.hero{padding:12px}.screen{padding:12px}.face{font-size:clamp(14px,4vw,21px)}}
 @keyframes sparklePop{0%{transform:translate(0,0) scale(.2) rotate(0);opacity:0}18%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1.1) rotate(180deg);opacity:0}}.success-sparkles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:10000}.success-sparkles i{position:absolute;left:var(--x);top:var(--y);font-style:normal;font-size:var(--size);animation:sparklePop 900ms ease-out forwards;filter:drop-shadow(0 2px 3px #d99b00)}@media(prefers-reduced-motion:reduce){.success-sparkles{display:none}}
+
+/* TV / Android TV Box: readable 10-foot layout and visible remote focus. */
+@media (min-width:1100px) and (min-height:600px) and (orientation:landscape){
+ html,body{min-height:100%;font-size:clamp(18px,1.25vw,24px)}
+ main,#app{max-width:1500px;padding:clamp(22px,2.5vw,42px)}
+ header{padding:20px 3vw;gap:24px}
+ button,.tile,.category-card,.back,.btn,.iconbtn,.round{min-height:58px}
+ .tile,.category-card{padding:clamp(18px,2vw,30px);gap:12px}
+ .tile b,.category-card b{font-size:clamp(22px,2vw,30px)}
+ .tile small,.category-card small{font-size:clamp(16px,1.2vw,21px);line-height:1.55}
+ .letter{min-width:64px;min-height:64px;font-size:clamp(26px,2.4vw,38px)}
+ .panel,.screen{padding:clamp(20px,2vw,34px)}
+}
+:focus-visible{outline:5px solid #e69b00!important;outline-offset:5px!important;box-shadow:0 0 0 3px #fff!important;z-index:2}
+button,a,[tabindex]{scroll-margin:90px}
 </style></head>
 <body><div id="app">
 <header><div class="brand">🌙 رحلة المسلم الصغير — الألعاب</div><div class="stats"><span class="stat">🪙 <b id="coins">0</b></span><span class="stat">⭐ <b id="stars">0</b></span><button class="iconbtn" id="sound">🔊</button><button class="iconbtn" id="home">⌂</button></div></header>
@@ -64,7 +79,54 @@ function updateGameStars(){$('#gameStars').textContent='⭐'.repeat(Math.max(1,3
 function draw(){let body=$('#gameBody'),cols=game.deck.length<=8?4:game.deck.length<=12?4:5,state={flipped:[],matched:0,lock:false};body.innerHTML='<div class="grid" style="grid-template-columns:repeat('+cols+',1fr)"></div>';let grid=body.firstChild;game.deck.forEach((x,i)=>{let b=document.createElement('button');b.className='card';b.innerHTML='<div class="inner"><div class="face front">❔</div><div class="face backface">'+x.face+'</div></div>';b.onclick=()=>{if(game.done||state.lock||b.classList.contains('flip')||b.classList.contains('match'))return;b.classList.add('flip');tone(520);state.flipped.push({b,i,id:x.id});if(state.flipped.length<2)return;state.lock=true;let [a,c]=state.flipped;if(a.id===c.id){setTimeout(()=>{a.b.classList.add('match');c.b.classList.add('match');state.matched++;state.flipped=[];state.lock=false;$('#gameProg').style.width=(state.matched/game.n*100)+'%';$('#coach').textContent='أحسنت! ما شاء الله عليك ⭐';celebrate();tone(900);if(state.matched===game.n)setTimeout(finish,450)},300)}else{game.mistakes++;updateGameStars();$('#coach').textContent='لا بأس! حاول مرة أخرى وتذكّر مكان البطاقات.';setTimeout(()=>{a.b.classList.remove('flip');c.b.classList.remove('flip');state.flipped=[];state.lock=false},850)}};grid.appendChild(b)})}
 function finish(){if(game.done)return;game.done=true;let stars=Math.max(1,3-game.mistakes),old=S.stars[game.idx]||0,gain=Math.max(0,stars-old);S.stars[game.idx]=Math.max(old,stars);S.coins+=stars*5+gain*3;if(!S.unlockAll)S.unlocked=Math.max(S.unlocked,Math.min(TOTAL,game.idx+2));save();$('#resultEm').textContent=stars===3?'🏆':'🎉';$('#resultTitle').textContent=stars===3?'ما شاء الله! ممتاز':'أحسنت! أكملت المستوى';$('#resultText').textContent='حصلت على '+stars+' نجوم وأضفت عملات إلى رصيدك.';$('#resultStars').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars);$('#result').hidden=false;tone(1100)}
 function closeResult(){$('#result').hidden=true}
-$('#next').onclick=()=>{closeResult();let n=game.idx+1;if(n<TOTAL&&(S.unlockAll||n<S.unlocked))start(n);else openWorld(world)};
+$('#next')
+<script>
+/* Android TV / TV Box remote navigation (D-pad, OK, Back). */
+(()=>{
+ const selector='button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+ const visible=el=>!!(el.offsetWidth||el.offsetHeight||el.getClientRects().length) && getComputedStyle(el).visibility!=='hidden';
+ const items=()=>[...document.querySelectorAll(selector)].filter(el=>visible(el)&&!el.closest('[hidden],[inert]'));
+ const center=el=>{const r=el.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2};};
+ const focusFirst=()=>{const all=items();if(!all.length)return;const target=all.find(x=>x.matches('#homeBtn,#home,#soundBtn,#sound,.tile,.category-card'))||all[0];target.focus({preventScroll:true});target.scrollIntoView({block:'nearest',inline:'nearest'});};
+ const move=dir=>{
+  const all=items();if(!all.length)return;
+  let current=document.activeElement;
+  if(!all.includes(current)){focusFirst();return;}
+  const a=center(current);
+  const candidates=all.filter(el=>el!==current).map(el=>({el,p:center(el)})).map(o=>{
+   const dx=o.p.x-a.x,dy=o.p.y-a.y;
+   const primary=dir==='right'?dx:dir==='left'?-dx:dir==='down'?dy:-dy;
+   const secondary=Math.abs(dir==='right'||dir==='left'?dy:dx);
+   return {...o,primary,score:primary>2?primary+secondary*2.4:Infinity};
+  }).filter(o=>Number.isFinite(o.score)).sort((x,y)=>x.score-y.score);
+  if(candidates.length){candidates[0].el.focus({preventScroll:true});candidates[0].el.scrollIntoView({block:'nearest',inline:'nearest'});}
+  else {
+   const wrap=all.filter(el=>el!==current).sort((x,y)=>{
+    const a=center(x),b=center(y);
+    return dir==='right'?a.x-b.x:dir==='left'?b.x-a.x:dir==='down'?a.y-b.y:b.y-a.y;
+   });
+   wrap[0]?.focus({preventScroll:true});wrap[0]?.scrollIntoView({block:'nearest',inline:'nearest'});
+  }
+ };
+ const goBack=()=>{
+  const back=document.querySelector('#categoryBack,.back, #homeBtn, #home');
+  if(back&&visible(back)){back.click();return;}
+  const home=document.querySelector('#homeBtn,#home');if(home){home.click();return;}
+  if(history.length>1)history.back();
+ };
+ document.addEventListener('keydown',e=>{
+  const tag=(e.target?.tagName||'').toLowerCase();
+  if(['input','textarea','select'].includes(tag)&&!['Escape','Backspace','BrowserBack'].includes(e.key))return;
+  const map={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right'};
+  if(map[e.key]){e.preventDefault();move(map[e.key]);return;}
+  if(e.key==='Escape'||e.key==='Backspace'||e.key==='BrowserBack'||e.key==='GoBack'||e.keyCode===4){e.preventDefault();goBack();}
+ });
+ document.addEventListener('focusin',e=>{if(e.target.matches(selector))e.target.scrollIntoView({block:'nearest',inline:'nearest'});});
+ window.addEventListener('load',()=>setTimeout(focusFirst,250));
+ document.addEventListener('click',e=>{if(e.target.closest('.tile,.category-card,[data-open]'))setTimeout(focusFirst,180);});
+})();
+</script>
+.onclick=()=>{closeResult();let n=game.idx+1;if(n<TOTAL&&(S.unlockAll||n<S.unlocked))start(n);else openWorld(world)};
 $('#retry').onclick=()=>{closeResult();start(game.idx)};$('#resultHome').onclick=()=>{closeResult();openWorld(world)};
 $('#worldBack').onclick=()=>{renderWorlds();screen('homeScreen')};$('#gameBack').onclick=()=>openWorld(world);$('#home').onclick=()=>{location.href='./index.html'};$('#sound').onclick=()=>{snd=!snd;S.sound=snd;window.gameSoundEnabled=snd;save();$('#sound').textContent=snd?'🔊':'🔇';$('#sound').setAttribute('aria-label',snd?'إيقاف الصوت':'تشغيل الصوت')};$('#sound').textContent=snd?'🔊':'🔇';$('#sound').setAttribute('aria-label',snd?'إيقاف الصوت':'تشغيل الصوت');
 hud();renderWorlds();
