@@ -1,5 +1,5 @@
 {
-  "version": "1.2.1",
+  "version": "1.2.2",
   "releaseDate": "2026-11-16",
   "channel": "stable",
   "updateMode": "service-worker-prompt",
@@ -8,6 +8,8 @@
     "D-pad arrows and OK/Enter selection",
     "Back key navigation",
     "Large-screen TV layout",
-    "PWA update release 1.2.1"
+    "PWA update release 1.2.1",
+    "Fixed visible update-script rendering",
+    "Improved automatic update detection and in-app update prompt"
   ]
 }
