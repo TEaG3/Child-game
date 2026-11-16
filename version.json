@@ -1,5 +1,5 @@
 {
-  "version": "1.2.0",
+  "version": "1.2.1",
   "releaseDate": "2026-11-16",
   "channel": "stable",
   "updateMode": "service-worker-prompt",
@@ -7,6 +7,7 @@
     "Android TV and TV Box remote navigation",
     "D-pad arrows and OK/Enter selection",
     "Back key navigation",
-    "Large-screen TV layout"
+    "Large-screen TV layout",
+    "PWA update release 1.2.1"
   ]
 }
