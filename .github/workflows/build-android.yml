@@ -62,6 +62,17 @@ jobs:
           node --check android-web/character-rotation.js
           node --check android-web/progress.js
           node --check android-web/voice-preferences.js
+          python - <<'PY'
+          import re, subprocess
+          html = open("android-web/index.html", encoding="utf-8").read()
+          scripts = re.findall(r"<script(?:\\s[^>]*)?>([\\s\\S]*?)</script>", html, re.I)
+          for number, source in enumerate(scripts, 1):
+              if source.strip():
+                  result = subprocess.run(["node", "--check"], input=source, text=True, capture_output=True)
+                  if result.returncode:
+                      raise SystemExit("Inline script %s failed syntax check:\\n%s" % (number, result.stderr))
+          print("All inline JavaScript blocks passed syntax checks.")
+          PY
       - name: Generate Android project
         run: npx cap add android
       - name: Sync local web assets
