@@ -327,11 +327,13 @@ button,a,[tabindex]{scroll-margin:90px}
  <button id="applyAppUpdate" type="button">تحديث الآن</button>
 </div>
 <script>
+/* Reliable PWA update detection and user-approved activation. */
 (()=>{
  if(!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
  let registration=null, refreshing=false;
  const notice=document.getElementById('appUpdateNotice');
  const apply=document.getElementById('applyAppUpdate');
+ if(!notice||!apply)return;
  const show=()=>{notice.style.display='flex';};
  const hide=()=>{notice.style.display='none';};
  const promptForWaitingWorker=()=>{
@@ -340,6 +342,7 @@ button,a,[tabindex]{scroll-margin:90px}
  navigator.serviceWorker.addEventListener('controllerchange',()=>{
   if(refreshing)return;
   refreshing=true;
+  hide();
   location.reload();
  });
  apply.addEventListener('click',()=>{
@@ -348,12 +351,31 @@ button,a,[tabindex]{scroll-margin:90px}
   apply.textContent='جارٍ تثبيت التحديث…';
   registration.waiting.postMessage({type:'SKIP_WAITING'});
  });
+ const checkForUpdate=()=>{
+  if(!registration || !navigator.onLine)return;
+  registration.update().catch(error=>console.warn('تعذر التحقق من تحديث اللعبة:',error));
+ };
  window.addEventListener('load',async()=>{
   try{
    registration=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
    promptForWaitingWorker();
    registration.addEventListener('updatefound',()=>{
-    const work
+    const worker=registration.installing;
+    if(!worker)return;
+    worker.addEventListener('statechange',()=>{
+     if(worker.state==='installed' && navigator.serviceWorker.controller)promptForWaitingWorker();
+    });
+   });
+   /* Check on every app start; the browser downloads a changed worker in the background. */
+   checkForUpdate();
+   window.addEventListener('online',checkForUpdate);
+   document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible')checkForUpdate();
+   });
+  }catch(error){console.warn('تعذر فحص تحديث اللعبة:',error);}
+ });
+})();
+</script>
 <script>
 /* Android TV / TV Box remote navigation (D-pad, OK, Back). */
 (()=>{
@@ -398,32 +420,6 @@ button,a,[tabindex]{scroll-margin:90px}
  document.addEventListener('focusin',e=>{if(e.target.matches(selector))e.target.scrollIntoView({block:'nearest',inline:'nearest'});});
  window.addEventListener('load',()=>setTimeout(focusFirst,250));
  document.addEventListener('click',e=>{if(e.target.closest('.tile,.category-card,[data-open]'))setTimeout(focusFirst,180);});
-})();
-</script>
-er=registration.installing;
-    if(!worker)return;
-    worker.addEventListener('statechange',()=>{
-     if(worker.state==='installed' && navigator.serviceWorker.controller)promptForWaitingWorker();
-    });
-   });
-   const CHECK_KEY='littleMuslimLastUpdateCheck';
-   const check=()=>{
-    if(!navigator.onLine)return;
-    let last=0;
-    try{last=Number(localStorage.getItem(CHECK_KEY))||0;}catch(_){}
-    if(Date.now()-last<24*60*60*1000)return;
-    try{localStorage.setItem(CHECK_KEY,String(Date.now()));}catch(_){}
-    registration.update().catch(()=>{
-     try{localStorage.removeItem(CHECK_KEY);}catch(_){}
-    });
-   };
-   window.addEventListener('online',check);
-   document.addEventListener('visibilitychange',()=>{
-    if(document.visibilityState==='visible')check();
-   });
-   check();
-  }catch(error){console.warn('تعذر فحص تحديث اللعبة:',error);}
- });
 })();
 </script>
 </body></html>
