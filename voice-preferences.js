@@ -130,7 +130,7 @@
       speakReadBtn.onclick = () => {
         if (window.gameSoundEnabled === false) return;
 
-        const word = document.getElementById('readWord')?.textContent;
+        const word = (document.getElementById('readWord') ? document.getElementById('readWord').textContent : null);
 
         if (word && word.trim()) {
           speakArabicText(word, 0.75);
@@ -148,7 +148,7 @@
       speakIslamBtn.onclick = () => {
         if (window.gameSoundEnabled === false) return;
 
-        const dua = document.getElementById('islamText')?.textContent;
+        const dua = (document.getElementById('islamText') ? document.getElementById('islamText').textContent : null);
 
         if (dua && dua.trim()) {
           speakArabicText(dua, 0.8);

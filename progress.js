@@ -102,7 +102,7 @@
         <button class="secondary" id="downloadData">📥 تنزيل بيانات اللعبة</button>
       </div>
     \`;
-    document.querySelector('main')?.appendChild(screen);
+    var mainElement=document.querySelector('main');if(mainElement)mainElement.appendChild(screen);
   }
 
   let cert = document.getElementById('certificate');
@@ -256,21 +256,21 @@
     cert.classList.add('open');
   }
 
-  document.getElementById('levelsBtn')?.addEventListener('click', () => showScreen('levels'));
-  document.getElementById('parentsBtn')?.addEventListener('click', () => showScreen('parents'));
-  document.querySelector('.progress-back')?.addEventListener('click', () => {
+  var el_levelsBtn=document.getElementById('levelsBtn');if(el_levelsBtn)el_levelsBtn.addEventListener('click', () => showScreen('levels'));
+  var el_parentsBtn=document.getElementById('parentsBtn');if(el_parentsBtn)el_parentsBtn.addEventListener('click', () => showScreen('parents'));
+  var progressBack=document.querySelector('.progress-back');if(progressBack)progressBack.addEventListener('click', () => {
     screen.classList.remove('active');
     home.style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-  document.getElementById('certBtn')?.addEventListener('click', showCert);
-  document.getElementById('screenCert')?.addEventListener('click', showCert);
-  document.getElementById('closeCert')?.addEventListener('click', () => cert.classList.remove('open'));
-  document.getElementById('printCert')?.addEventListener('click', () => window.print());
-  document.getElementById('offlineBtn')?.addEventListener('click', downloadOffline);
-  document.getElementById('downloadData')?.addEventListener('click', downloadOffline);
+  var el_certBtn=document.getElementById('certBtn');if(el_certBtn)el_certBtn.addEventListener('click', showCert);
+  var el_screenCert=document.getElementById('screenCert');if(el_screenCert)el_screenCert.addEventListener('click', showCert);
+  var el_closeCert=document.getElementById('closeCert');if(el_closeCert)el_closeCert.addEventListener('click', () => cert.classList.remove('open'));
+  var el_printCert=document.getElementById('printCert');if(el_printCert)el_printCert.addEventListener('click', () => window.print());
+  var el_offlineBtn=document.getElementById('offlineBtn');if(el_offlineBtn)el_offlineBtn.addEventListener('click', downloadOffline);
+  var el_downloadData=document.getElementById('downloadData');if(el_downloadData)el_downloadData.addEventListener('click', downloadOffline);
 
-  document.getElementById('installBtn')?.addEventListener('click', async () => {
+  var installButton=document.getElementById('installBtn');if(installButton)installButton.addEventListener('click', async () => {
     if (installPrompt) {
       installPrompt.prompt();
       await installPrompt.userChoice;
@@ -297,7 +297,7 @@
       const results = await Promise.allSettled([...new Set(files)].map(file => cache.add(file)));
       const failed = results.filter(x => x.status === 'rejected').length;
       let size = '';
-      if (navigator.storage?.estimate) {
+      if (navigator.storage && navigator.storage.estimate) {
         const e = await navigator.storage.estimate();
         size = ' المساحة المستخدمة تقريباً: ' + Math.round((e.usage || 0) / 1024 / 1024 * 10) / 10 + ' MB.';
       }
@@ -319,7 +319,7 @@
     window.coachFeedback = function (ok, activity) {
       oldCoach(ok, activity);
       if (ok) {
-        const active = document.querySelector('.panel.active')?.id;
+        const activePanel = document.querySelector('.panel.active');const active = activePanel ? activePanel.id : null;
         if (active === 'reading') {
           const box = document.getElementById('readChoices');
           if (box && !box.dataset.progressDone) { box.dataset.progressDone = '1'; record('reading'); }
@@ -349,7 +349,7 @@
     };
   }
 
-  document.getElementById('letterGrid')?.addEventListener('click', e => {
+  var letterGrid=document.getElementById('letterGrid');if(letterGrid)letterGrid.addEventListener('click', e => {
     const b = e.target.closest('[data-letter]');
     if (!b) return;
     const i = Number(b.dataset.letter);

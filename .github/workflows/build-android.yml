@@ -52,9 +52,30 @@ jobs:
       - name: Prepare offline web bundle
         run: |
           mkdir -p android-web
-          cp index.html games.html progress.js voice-preferences.js game-audio.js cinematic-fx.js character-rotation.js sw.js manifest.webmanifest icon.svg abdulhay.webp abdulmuhaimin.webp aisha.webp rabbit.png android-web/
+          cp index.html games.html progress.js voice-preferences.js game-audio.js cinematic-fx.js character-rotation.js sw.js manifest.webmanifest icon.svg abdulhay.webp abdulmuhaimin.webp aisha.webp rabbit.png cat.png boy.jpg girl.jpg girl.png cat.jpg rabbit.jpg android-web/
           mkdir -p android-web/assets/audio
           cp assets/audio/*.ogg assets/audio/LICENSE-KENNEY-CC0.txt android-web/assets/audio/
+          cp -R assets/audio/letters android-web/assets/audio/
+          test -s android-web/cat.png
+          test -s android-web/assets/audio/letters/names/alif.mp3
+          test -s android-web/assets/audio/letters/sounds/alif.mp3
+          node --check android-web/character-rotation.js
+          node --check android-web/progress.js
+          node --check android-web/voice-preferences.js
+          node --check android-web/education-enhancements.js
+          node --check android-web/cinematic-fx.js
+          node --check android-web/game-audio.js
+          python - <<'PY'
+          import re, subprocess
+          html = open("android-web/index.html", encoding="utf-8").read()
+          scripts = re.findall(r"<script(?:\s[^>]*)?>([\s\S]*?)</script>", html, re.I)
+          for number, source in enumerate(scripts, 1):
+              if source.strip():
+                  result = subprocess.run(["node", "--check"], input=source, text=True, capture_output=True)
+                  if result.returncode:
+                      raise SystemExit("Inline script %s failed syntax check:\n%s" % (number, result.stderr))
+          print("All inline JavaScript blocks passed syntax checks.")
+          PY
       - name: Generate Android project
         run: npx cap add android
       - name: Sync local web assets
