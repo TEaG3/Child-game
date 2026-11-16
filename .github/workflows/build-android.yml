@@ -9,12 +9,19 @@ on:
       - 'voice-preferences.js'
       - 'game-audio.js'
       - 'cinematic-fx.js'
+      - 'character-rotation.js'
+      - 'abdulhay.webp'
+      - 'abdulmuhaimin.webp'
+      - 'aisha.webp'
+      - 'rabbit.png'
       - 'assets/audio/**'
       - 'sw.js'
+      - 'version.json'
       - 'manifest.webmanifest'
       - 'icon.svg'
       - '*.jpg'
       - '*.png'
+      - '*.webp'
       - 'audio/**'
       - 'package.json'
       - 'capacitor.config.json'
@@ -45,7 +52,7 @@ jobs:
       - name: Prepare offline web bundle
         run: |
           mkdir -p android-web
-          cp index.html games.html progress.js voice-preferences.js game-audio.js cinematic-fx.js sw.js manifest.webmanifest icon.svg boy.jpg girl.png rabbit.png cat.png android-web/
+          cp index.html games.html progress.js voice-preferences.js game-audio.js cinematic-fx.js character-rotation.js sw.js manifest.webmanifest icon.svg abdulhay.webp abdulmuhaimin.webp aisha.webp rabbit.png android-web/
           mkdir -p android-web/assets/audio
           cp assets/audio/*.ogg assets/audio/LICENSE-KENNEY-CC0.txt android-web/assets/audio/
       - name: Generate Android project

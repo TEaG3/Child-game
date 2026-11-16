@@ -1,5 +1,5 @@
 {
-  "version": "1.2.3",
+  "version": "1.2.4",
   "releaseDate": "2026-11-16",
   "channel": "stable",
   "updateMode": "service-worker-prompt",
@@ -8,10 +8,10 @@
     "D-pad arrows and OK/Enter selection",
     "Back key navigation",
     "Large-screen TV layout",
-    "PWA update release 1.2.1",
-    "Fixed visible update-script rendering",
-    "Improved automatic update detection and in-app update prompt",
+    "Visible update prompt and automatic update detection",
     "Four named mascots rotate every five seconds",
-    "Gentle 3D depth and character entrance animation"
+    "New transparent mascot artwork for عبد الحي and عبدالمهيمن and عائشة",
+    "Gentle 3D depth and character entrance animation",
+    "Updated offline Android bundle with mascot assets"
   ]
 }
