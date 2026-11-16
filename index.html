@@ -299,4 +299,58 @@ $('startMemory').onclick=startMem;updateScore();if('serviceWorker'in navigator&&
 })();
 </script>
 
+
+<style>
+#appUpdateNotice{position:fixed;inset:auto 14px max(14px,env(safe-area-inset-bottom)) 14px;z-index:10000;display:none;align-items:center;justify-content:space-between;gap:12px;max-width:680px;margin:auto;padding:13px 15px;background:#145b48;color:#fff;border:2px solid #bcebd0;border-radius:18px;box-shadow:0 10px 35px #0003}
+#appUpdateNotice p{margin:0;font-size:14px;line-height:1.6}
+#appUpdateNotice button{background:#ffc857;color:#174f3e;padding:10px 14px;border-radius:12px;font-weight:bold;white-space:nowrap}
+#appUpdateNotice button:disabled{opacity:.65}
+@media(max-width:420px){#appUpdateNotice{align-items:stretch;flex-direction:column}#appUpdateNotice button{width:100%}}
+</style>
+<div id="appUpdateNotice" role="status" aria-live="polite" dir="rtl">
+ <p><strong>يتوفر تحديث جديد للعبة!</strong><br>اضغط لتثبيت النسخة الأحدث.</p>
+ <button id="applyAppUpdate" type="button">تحديث الآن</button>
+</div>
+<script>
+(()=>{
+ if(!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
+ let registration=null, refreshing=false;
+ const notice=document.getElementById('appUpdateNotice');
+ const apply=document.getElementById('applyAppUpdate');
+ const show=()=>{notice.style.display='flex';};
+ const hide=()=>{notice.style.display='none';};
+ const promptForWaitingWorker=()=>{
+  if(registration && registration.waiting && navigator.serviceWorker.controller) show();
+ };
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{
+  if(refreshing)return;
+  refreshing=true;
+  location.reload();
+ });
+ apply.addEventListener('click',()=>{
+  if(!registration || !registration.waiting)return;
+  apply.disabled=true;
+  apply.textContent='جارٍ تثبيت التحديث…';
+  registration.waiting.postMessage({type:'SKIP_WAITING'});
+ });
+ window.addEventListener('load',async()=>{
+  try{
+   registration=await navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'});
+   promptForWaitingWorker();
+   registration.addEventListener('updatefound',()=>{
+    const worker=registration.installing;
+    if(!worker)return;
+    worker.addEventListener('statechange',()=>{
+     if(worker.state==='installed' && navigator.serviceWorker.controller)promptForWaitingWorker();
+    });
+   });
+   const check=()=>{if(navigator.onLine)registration.update().catch(()=>{});};
+   window.addEventListener('online',check);
+   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')check();});
+   window.setInterval(check,6*60*60*1000);
+   check();
+  }catch(error){console.warn('تعذر فحص تحديث اللعبة:',error);}
+ });
+})();
+</script>
 </body></html>
