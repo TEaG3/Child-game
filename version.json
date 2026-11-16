@@ -1,5 +1,5 @@
 {
-  "version": "1.2.2",
+  "version": "1.2.3",
   "releaseDate": "2026-11-16",
   "channel": "stable",
   "updateMode": "service-worker-prompt",
@@ -10,6 +10,8 @@
     "Large-screen TV layout",
     "PWA update release 1.2.1",
     "Fixed visible update-script rendering",
-    "Improved automatic update detection and in-app update prompt"
+    "Improved automatic update detection and in-app update prompt",
+    "Four named mascots rotate every five seconds",
+    "Gentle 3D depth and character entrance animation"
   ]
 }
