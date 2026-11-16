@@ -352,6 +352,30 @@ $('startMemory').onclick=startMem;updateScore();if('serviceWorker'in navigator&&
 :focus-visible{outline:5px solid #e69b00!important;outline-offset:5px!important;box-shadow:0 0 0 3px #fff!important;z-index:2}
 button,a,[tabindex]{scroll-margin:90px}
 </style>
+<div id="nativeUpdateNotice" role="status" aria-live="polite" dir="rtl" style="display:none;position:fixed;left:14px;right:14px;bottom:14px;z-index:10001;background:#174f3e;color:#fff;border:2px solid #ffc857;border-radius:18px;padding:14px;box-shadow:0 10px 35px #0004">
+<strong>يتوفر إصدار أحدث من التطبيق!</strong><p style="margin:7px 0">حمّل النسخة الجديدة لتحصل على آخر التحسينات.</p><a id="nativeUpdateLink" href="https://github.com/TEaG3/Child-game/releases/download/android-latest/app-debug.apk" style="display:inline-block;background:#ffc857;color:#174f3e;padding:10px 14px;border-radius:12px;font-weight:bold;text-decoration:none">تحميل التحديث</a><button id="dismissNativeUpdate" type="button" style="margin-right:8px;padding:10px 14px;border-radius:12px">لاحقاً</button></div>
+<script>
+(()=> {
+ const CURRENT_APP_VERSION='1.2.5';
+ const box=document.getElementById('nativeUpdateNotice');
+ const dismiss=document.getElementById('dismissNativeUpdate');
+ if(!box||!dismiss)return;
+ const parse=v=>String(v||'0').split('.').map(n=>parseInt(n,10)||0);
+ const newer=(a,b)=>{const x=parse(a),y=parse(b);for(let i=0;i<Math.max(x.length,y.length);i++){if((y[i]||0)>(x[i]||0))return true;if((y[i]||0)<(x[i]||0))return false;}return false;};
+ dismiss.addEventListener('click',()=>box.style.display='none');
+ async function check(){
+  if(!navigator.onLine)return;
+  try{
+   const response=await fetch('https://teag3.github.io/Child-game/version.json?check='+Date.now(),{cache:'no-store'});
+   if(!response.ok)return;
+   const remote=await response.json();
+   if(newer(CURRENT_APP_VERSION,remote.version))box.style.display='block';
+  }catch(error){console.info('تعذر التحقق من إصدار التطبيق حالياً؛ سيعمل دون اتصال.');}
+ }
+ window.addEventListener('load',check);
+ window.addEventListener('online',check);
+})();
+</script>
 <div id="appUpdateNotice" role="status" aria-live="polite" dir="rtl">
  <p><strong>يتوفر تحديث جديد للعبة!</strong><br>اضغط لتثبيت النسخة الأحدث.</p>
  <button id="applyAppUpdate" type="button">تحديث الآن</button>
