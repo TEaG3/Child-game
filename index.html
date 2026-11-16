@@ -129,7 +129,7 @@ $('soundBtn').onclick=()=>{soundOn=!soundOn;window.gameSoundEnabled=soundOn;try{
 const alphabet=[['ا','أسد','🦁'],['ب','بطة','🦆'],['ت','تفاح','🍎'],['ث','ثعلب','🦊'],['ج','جمل','🐪'],['ح','حصان','🐎'],['خ','خبز','🍞'],['د','دب','🐻'],['ذ','ذرة','🌽'],['ر','رمان','🍎'],['ز','زهرة','🌷'],['س','سمكة','🐟'],['ش','شمس','☀️'],['ص','صقر','🦅'],['ض','ضفدع','🐸'],['ط','طائرة','✈️'],['ظ','ظرف','✉️'],['ع','عنب','🍇'],['غ','غيمة','☁️'],['ف','فراشة','🦋'],['ق','قمر','🌙'],['ك','كتاب','📘'],['ل','ليمون','🍋'],['م','موز','🍌'],['ن','نجمة','⭐'],['ه','هلال','🌙'],['و','وردة','🌹'],['ي','يد','✋']];
 const letterAudioKeys={'ا':'alif','ب':'baa','ت':'taa','ث':'thaa','ج':'jeem','ح':'haa','خ':'khaa','د':'daal','ذ':'thaal','ر':'raa','ز':'zay','س':'seen','ش':'sheen','ص':'saad','ض':'daad','ط':'taa-emphatic','ظ':'zhaa','ع':'ayn','غ':'ghayn','ف':'faa','ق':'qaaf','ك':'kaaf','ل':'laam','م':'meem','ن':'noon','ه':'haa-light','و':'waaw','ي':'yaa'};
 $('letterGrid').innerHTML=alphabet.map((x,i)=>'<button class="letter" type="button" data-letter="'+letterAudioKeys[x[0]]+'" data-index="'+i+'" aria-label="حرف '+letterNames[x[0]]+'">'+x[0]+'</button>').join('');
-function chooseLetter(i){if(window.speechSynthesis)window.speechSynthesis.cancel();let x=alphabet[i];$('selectedLetterCard').dataset.letter=letterAudioKeys[x[0]];$('chosenLetter').textContent=x[0];$('letterWord').textContent=x[1]+' '+x[2];$('letterHint').textContent='حرف '+({'ا':'الألف','ب':'الباء','ت':'التاء','ث':'الثاء','ج':'الجيم','ح':'الحاء','خ':'الخاء','د':'الدال','ذ':'الذال','ر':'الراء','ز':'الزاي','س':'السين','ش':'الشين','ص':'الصاد','ض':'الضاد','ط':'الطاء','ظ':'الظاء','ع':'العين','غ':'الغين','ف':'الفاء','ق':'القاف','ك':'الكاف','ل':'اللام','م':'الميم','ن':'النون','ه':'الهاء','و':'الواو','ي':'الياء'}[x[0]]||x[0]);document.querySelectorAll('.letter').forEach(b=>b.classList.toggle('selected',Number(b.dataset.letter)===i));}
+function chooseLetter(i){if(window.speechSynthesis)window.speechSynthesis.cancel();let x=alphabet[i];$('selectedLetterCard').dataset.letter=letterAudioKeys[x[0]];$('chosenLetter').textContent=x[0];$('letterWord').textContent=x[1]+' '+x[2];$('letterHint').textContent='حرف '+({'ا':'الألف','ب':'الباء','ت':'التاء','ث':'الثاء','ج':'الجيم','ح':'الحاء','خ':'الخاء','د':'الدال','ذ':'الذال','ر':'الراء','ز':'الزاي','س':'السين','ش':'الشين','ص':'الصاد','ض':'الضاد','ط':'الطاء','ظ':'الظاء','ع':'العين','غ':'الغين','ف':'الفاء','ق':'القاف','ك':'الكاف','ل':'اللام','م':'الميم','ن':'النون','ه':'الهاء','و':'الواو','ي':'الياء'}[x[0]]||x[0]);document.querySelectorAll('.letter').forEach(b=>b.classList.toggle('selected',Number(b.dataset.index)===i));}
 document.querySelectorAll('.letter').forEach(b=>b.onclick=()=>{chooseLetter(Number(b.dataset.index));tone(600)});chooseLetter(0);$('speakLetterName').onclick=()=>playAlphabetAudio('name',$('speakLetterName'));$('speakLetterSound').onclick=()=>playAlphabetAudio('sound',$('speakLetterSound'));
 // كل سؤال يحدد إجابته الصحيحة صراحةً؛ لا نعتمد على ترتيب الخيارات.
 const words=[
@@ -263,4 +263,30 @@ $('startMemory').onclick=startMem;updateScore();if('serviceWorker'in navigator&&
 </script><script src="./game-audio.js" defer></script><script src="./voice-preferences.js" defer></script>
 <script src="./cinematic-fx.js" defer></script>
 <script src="./education-enhancements.js" defer></script>
+
+<script>
+/* Fallback navigation: keeps education activities usable if an earlier
+   initialization script fails before attaching its click handlers. */
+(()=>{
+ const chooser=document.getElementById('activityChooser');
+ if(!chooser) return;
+ chooser.addEventListener('click',event=>{
+   const tile=event.target.closest('[data-open]');
+   if(!tile || !chooser.contains(tile)) return;
+   const id=tile.dataset.open;
+   const panel=document.getElementById(id);
+   if(!panel) return;
+   document.getElementById('categoryChooser').hidden=true;
+   chooser.hidden=true;
+   document.querySelectorAll('main .panel').forEach(p=>p.classList.remove('active'));
+   document.getElementById('home').style.display='block';
+   panel.classList.add('active');
+   if(id==='math' && typeof window.newMath==='function') window.newMath();
+   if(id==='reading' && typeof window.newRead==='function') window.newRead();
+   if(id==='memory' && typeof window.resetMemory==='function') window.resetMemory();
+   window.scrollTo({top:0,behavior:'smooth'});
+ });
+})();
+</script>
+
 </body></html>
