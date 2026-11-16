@@ -16,7 +16,7 @@
     const a=new Audio(files[key]);
     a.preload='auto';
     /* Keep everyday interface feedback gentle; reserve louder cues for rewards. */
-    a.volume=key==='click'?0.18:key==='select'?0.24:key==='open'?0.28:0.55;
+    a.volume=key==='click'?0.06:key==='select'?0.10:key==='open'?0.16:0.55;
     players[key]=a;
   });
   window.playGameSound=function(name){
@@ -28,6 +28,7 @@
     const b=e.target.closest('button,[role="button"]');
     if(!b||b.disabled||b.dataset.noClickSound!==undefined)return;
     if(b.id==='sound'||b.id==='soundBtn')return;
+    if(b.closest('#letterGrid,.letter'))return;
     window.playGameSound('click');
   },true);
 })();
