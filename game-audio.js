@@ -15,6 +15,8 @@
   Object.keys(files).forEach(key=>{
     const a=new Audio(files[key]);
     a.preload='auto';
+    /* Keep everyday interface feedback gentle; reserve louder cues for rewards. */
+    a.volume=key==='click'?0.18:key==='select'?0.24:key==='open'?0.28:0.55;
     players[key]=a;
   });
   window.playGameSound=function(name){
