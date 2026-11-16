@@ -52,7 +52,7 @@ jobs:
       - name: Prepare offline web bundle
         run: |
           mkdir -p android-web
-          cp index.html games.html progress.js voice-preferences.js game-audio.js cinematic-fx.js character-rotation.js sw.js manifest.webmanifest icon.svg abdulhay.webp abdulmuhaimin.webp aisha.webp rabbit.png cat.png boy.jpg girl.jpg girl.png cat.jpg rabbit.jpg android-web/
+          cp index.html games.html progress.js voice-preferences.js game-audio.js cinematic-fx.js education-enhancements.js character-rotation.js sw.js manifest.webmanifest icon.svg abdulhay.webp abdulmuhaimin.webp aisha.webp rabbit.png cat.png boy.jpg girl.jpg girl.png cat.jpg rabbit.jpg android-web/
           mkdir -p android-web/assets/audio
           cp assets/audio/*.ogg assets/audio/LICENSE-KENNEY-CC0.txt android-web/assets/audio/
           cp -R assets/audio/letters android-web/assets/audio/
@@ -78,6 +78,45 @@ jobs:
           PY
       - name: Generate Android project
         run: npx cap add android
+      - name: Enable Android TV and remote launch support
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          path = "android/app/src/main/AndroidManifest.xml"
+          ET.register_namespace("android", "http://schemas.android.com/apk/res/android")
+          ns = "{http://schemas.android.com/apk/res/android}"
+          tree = ET.parse(path)
+          root = tree.getroot()
+          for feature in root.findall("uses-feature"):
+              if feature.get(ns + "name") == "android.hardware.touchscreen":
+                  feature.set(ns + "required", "false")
+                  break
+          else:
+              feature = ET.Element("uses-feature")
+              feature.set(ns + "name", "android.hardware.touchscreen")
+              feature.set(ns + "required", "false")
+              root.insert(0, feature)
+          for supports in root.findall("supports-screens"):
+              root.remove(supports)
+          supports = ET.Element("supports-screens")
+          for size in ("smallScreens", "normalScreens", "largeScreens", "xlargeScreens"):
+              supports.set(ns + size, "true")
+          root.insert(1, supports)
+          found = False
+          for activity in root.iter("activity"):
+              for intent in activity.findall("intent-filter"):
+                  actions = [x.get(ns + "name") for x in intent.findall("action")]
+                  categories = [x.get(ns + "name") for x in intent.findall("category")]
+                  if "android.intent.action.MAIN" in actions and "android.intent.category.LAUNCHER" in categories:
+                      if "android.intent.category.LEANBACK_LAUNCHER" not in categories:
+                          category = ET.SubElement(intent, "category")
+                          category.set(ns + "name", "android.intent.category.LEANBACK_LAUNCHER")
+                      found = True
+          if not found:
+              raise SystemExit("Could not find the main launcher activity to enable Android TV.")
+          tree.write(path, encoding="utf-8", xml_declaration=True)
+          print("Android TV launcher category and touchscreen-optional support configured.")
+          PY
       - name: Sync local web assets
         run: npx cap sync android
       - name: Build installable debug APK
