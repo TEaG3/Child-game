@@ -52,9 +52,9 @@ jobs:
       - name: Prepare offline web bundle
         run: |
           mkdir -p android-web
-          cp index.html games.html progress.js voice-preferences.js game-audio.js cinematic-fx.js character-rotation.js sw.js manifest.webmanifest icon.svg abdulhay.webp abdulmuhaimin.webp aisha.webp rabbit.png android-web/
+          cp index.html games.html progress.js voice-preferences.js game-audio.js cinematic-fx.js character-rotation.js sw.js manifest.webmanifest icon.svg abdulhay.webp abdulmuhaimin.webp aisha.webp rabbit.png cat.png boy.jpg girl.jpg girl.png cat.jpg rabbit.jpg android-web/
           mkdir -p android-web/assets/audio
-          cp assets/audio/*.ogg assets/audio/LICENSE-KENNEY-CC0.txt android-web/assets/audio/
+          cp assets/audio/*.ogg assets/audio/LICENSE-KENNEY-CC0.txt android-web/assets/audio/\n          cp -R assets/audio/letters android-web/assets/audio/
       - name: Generate Android project
         run: npx cap add android
       - name: Sync local web assets
