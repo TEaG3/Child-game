@@ -344,10 +344,21 @@ $('startMemory').onclick=startMem;updateScore();if('serviceWorker'in navigator&&
      if(worker.state==='installed' && navigator.serviceWorker.controller)promptForWaitingWorker();
     });
    });
-   const check=()=>{if(navigator.onLine)registration.update().catch(()=>{});};
+   const CHECK_KEY='littleMuslimLastUpdateCheck';
+   const check=()=>{
+    if(!navigator.onLine)return;
+    let last=0;
+    try{last=Number(localStorage.getItem(CHECK_KEY))||0;}catch(_){}
+    if(Date.now()-last<24*60*60*1000)return;
+    try{localStorage.setItem(CHECK_KEY,String(Date.now()));}catch(_){}
+    registration.update().catch(()=>{
+     try{localStorage.removeItem(CHECK_KEY);}catch(_){}
+    });
+   };
    window.addEventListener('online',check);
-   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')check();});
-   window.setInterval(check,6*60*60*1000);
+   document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible')check();
+   });
    check();
   }catch(error){console.warn('تعذر فحص تحديث اللعبة:',error);}
  });
