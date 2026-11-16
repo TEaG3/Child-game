@@ -84,7 +84,7 @@ $('#retry').onclick=()=>{closeResult();start(game.idx)};$('#resultHome').onclick
 $('#worldBack').onclick=()=>{renderWorlds();screen('homeScreen')};$('#gameBack').onclick=()=>openWorld(world);$('#home').onclick=()=>{location.href='./index.html'};$('#sound').onclick=()=>{snd=!snd;S.sound=snd;window.gameSoundEnabled=snd;save();$('#sound').textContent=snd?'🔊':'🔇';$('#sound').setAttribute('aria-label',snd?'إيقاف الصوت':'تشغيل الصوت')};$('#sound').textContent=snd?'🔊':'🔇';$('#sound').setAttribute('aria-label',snd?'إيقاف الصوت':'تشغيل الصوت');
 hud();renderWorlds();
 </script>
-script>
+<script>
 /* Android TV / TV Box remote navigation (D-pad, OK, Back). */
 (()=>{
  const selector='button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
