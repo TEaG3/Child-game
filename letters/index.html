@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#145b48"><title>مغامرة الحروف | رحلة المسلم الصغير</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header><a class="back" href="../index.html">← العودة إلى التعليم</a><h1>🌟 مغامرة الحروف</h1><span>28 حرفاً</span></header>
+<main>
+<section id="selection-screen" class="screen active">
+<h2>اختر حرفاً لنتعلمه!</h2><p class="hint">اختر أي حرف لبدء مغامرة التعلم.</p>
+<div id="letters-grid" class="grid-container" aria-label="الحروف العربية"></div>
+</section>
+<section id="lesson-screen" class="screen" aria-live="polite">
+<button id="back-btn" class="btn-secondary">🔙 عودة للحروف</button>
+<div class="progress"><span id="phase-label">المرحلة 1 من 3</span><div class="progress-track"><i id="phase-progress"></i></div></div>
+<section id="phase-intro" class="lesson-phase">
+<div class="intro-container"><img src="../abdulhay.webp" alt="عبد الحي" class="character-img" onerror="this.hidden=true"><div id="big-letter" class="huge-letter">ب</div></div>
+<h2>هذا حرف <span id="letter-name-display">باء</span></h2><p class="hint">استمع إلى اسم الحرف وصوته، ثم انتقل إلى الكلمات.</p>
+<div class="actions"><button id="speak-name" class="btn-primary">🔊 اسم الحرف</button><button id="speak-sound" class="btn-secondary">🎵 صوت الحرف</button><button id="next-words" class="btn-primary">هيا نتعلم الكلمات ←</button></div>
+</section>
+<section id="phase-words" class="lesson-phase hidden">
+<h2>كلمات تبدأ بحرف <span class="current-letter-text"></span></h2><div id="words-container" class="cards-container"></div>
+<p class="hint">اضغط على البطاقة لسماع الكلمة.</p><div class="actions"><button id="next-quiz" class="btn-primary">ابدأ الاختبار ⭐</button></div>
+</section>
+<section id="phase-quiz" class="lesson-phase hidden">
+<h2>أي صورة تبدأ بحرف <span class="current-letter-text"></span>؟</h2><p class="hint">اختر الإجابة الصحيحة.</p><div id="quiz-options" class="cards-container"></div><p id="quiz-feedback" role="status" class="feedback"></p>
+</section>
+<section id="celebration-screen" class="hidden celebration" role="dialog" aria-modal="true">
+<div class="stars">⭐⭐⭐</div><h2>أحسنت! إجابة صحيحة 🎉</h2><p>أنت تتقدم في تعلم الحروف!</p><div class="actions"><button id="again-btn" class="btn-secondary">إعادة الدرس</button><button id="next-letter-btn" class="btn-primary">حرف آخر ←</button></div>
+</section>
+</section>
+</main>
+<script src="./script.js"></script>
+</body></html>
