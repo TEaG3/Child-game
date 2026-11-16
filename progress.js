@@ -36,7 +36,7 @@
   ];
 
   const style = document.createElement('style');
-  style.textContent = \`
+  style.textContent = `
     .extra-tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}
     .extra-tools button{border:2px solid white;border-radius:18px;padding:13px 9px;background:#fff;box-shadow:var(--shadow);color:var(--ink);font-weight:bold;min-height:90px}
     .extra-tools button span{display:block;font-size:27px;margin-bottom:5px}
@@ -65,7 +65,7 @@
     .certificate-paper p{line-height:2}
     @media(max-width:650px){.extra-tools,.parent-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media print{body>*:not(#certificate){display:none!important}#certificate{display:flex!important;position:static;background:white;padding:0}#certificate .certificate-paper{max-width:none;border-radius:0;box-shadow:none}.no-print{display:none!important}}
-  \`;
+  `;
   if (!document.getElementById('littleMuslimProgressStyle')) {
     style.id = 'littleMuslimProgressStyle';
     document.head.appendChild(style);
@@ -76,13 +76,13 @@
     const tools = document.createElement('div');
     tools.id = 'progressTools';
     tools.className = 'extra-tools';
-    tools.innerHTML = \`
+    tools.innerHTML = `
       <button id="levelsBtn"><span>🗺️</span>طريق المراحل<small>تعلم خطوة بخطوة</small></button>
       <button id="parentsBtn"><span>👨‍👩‍👧</span>لوحة الأهل<small>متابعة التقدم</small></button>
       <button id="offlineBtn"><span>📥</span>تنزيل المحتوى<small>للاستخدام دون إنترنت</small></button>
       <button id="certBtn"><span>🏅</span>شهادة الإنجاز<small>اطبع إنجازك</small></button>
       <button id="installBtn"><span>📲</span>تثبيت اللعبة<small>على الجهاز</small></button>
-    \`;
+    `;
     home.appendChild(tools);
   }
 
@@ -91,7 +91,7 @@
     screen = document.createElement('section');
     screen.id = 'progressScreen';
     screen.className = 'progress-screen';
-    screen.innerHTML = \`
+    screen.innerHTML = `
       <div class="panel-head">
         <h2 id="progressTitle">🗺️ طريق المراحل التعليمية</h2>
         <button class="back progress-back">الرئيسية ←</button>
@@ -101,7 +101,7 @@
         <button class="primary" id="screenCert">🏅 عرض الشهادة</button>
         <button class="secondary" id="downloadData">📥 تنزيل بيانات اللعبة</button>
       </div>
-    \`;
+    `;
     var mainElement=document.querySelector('main');if(mainElement)mainElement.appendChild(screen);
   }
 
@@ -110,7 +110,7 @@
     cert = document.createElement('div');
     cert.id = 'certificate';
     cert.className = 'certificate';
-    cert.innerHTML = \`
+    cert.innerHTML = `
       <div class="certificate-paper">
         <div style="font-size:48px">🌙 ⭐ 🏅</div>
         <div>رحلة المسلم الصغير</div>
@@ -125,7 +125,7 @@
           <button class="secondary" id="closeCert">إغلاق</button>
         </div>
       </div>
-    \`;
+    `;
     document.body.appendChild(cert);
   }
 
@@ -140,18 +140,18 @@
     if (!c) return;
     c.innerHTML = tracks.map(t => {
       const n = t.count(), pct = Math.min(100, Math.round(n / t.levels[2][1] * 100)), done = stageCount(t);
-      return \`
+      return `
         <div class="track-card">
-          <div class="track-top"><span>\${t.icon} \${t.name}</span><span>\${n} / \${t.levels[2][1]}</span></div>
-          <div class="track-line"><i style="width:\${pct}%"></i></div>
+          <div class="track-top"><span>${t.icon} ${t.name}</span><span>${n} / ${t.levels[2][1]}</span></div>
+          <div class="track-line"><i style="width:${pct}%"></i></div>
           <div class="level-chips">
-            \${t.levels.map((l, i) => \`<span class="level-chip \${done > i ? 'done' : ''}">\${done > i ? '✓' : '🔒'} \${l[0]} (\${l[1]})</span>\`).join('')}
+            ${t.levels.map((l, i) => `<span class="level-chip ${done > i ? 'done' : ''}">${done > i ? '✓' : '🔒'} ${l[0]} (${l[1]})</span>`).join('')}
           </div>
-        </div>\`;
+        </div>`;
     }).join('');
     const totalStages = tracks.length * 3;
     const completed = tracks.reduce((s, t) => s + stageCount(t), 0);
-    c.insertAdjacentHTML('beforeend', \`<div class="offline-note">⭐ مجموع المراحل المكتملة: <b>\${completed} من \${totalStages}</b>. تُحفظ هذه النتائج على هذا الجهاز فقط، ولا تُرسل إلى أي خادم.</div>\`);
+    c.insertAdjacentHTML('beforeend', `<div class="offline-note">⭐ مجموع المراحل المكتملة: <b>${completed} من ${totalStages}</b>. تُحفظ هذه النتائج على هذا الجهاز فقط، ولا تُرسل إلى أي خادم.</div>`);
   }
 
   function showScreen(kind) {
@@ -162,19 +162,19 @@
 
     if (kind === 'parents') {
       const c = document.getElementById('progressContent');
-      c.innerHTML = \`
+      c.innerHTML = `
         <div class="name-box">
           <label for="childNameInput"><b>👶 اسم الطفل (يظهر في الشهادة):</b></label>
           <input id="childNameInput" type="text" maxlength="60" placeholder="اكتب اسم البطل هنا...">
           <button class="primary" id="saveChildName" type="button">حفظ الاسم</button>
         </div>
         <div class="parent-grid">
-          <div class="parent-stat"><b>\${data.letters.length}</b>حرف تمت زيارته</div>
-          <div class="parent-stat"><b>\${data.reading}</b>إجابة قراءة</div>
-          <div class="parent-stat"><b>\${data.math}</b>إجابة حساب</div>
-          <div class="parent-stat"><b>\${data.writing}</b>تدريب كتابة</div>
+          <div class="parent-stat"><b>${data.letters.length}</b>حرف تمت زيارته</div>
+          <div class="parent-stat"><b>${data.reading}</b>إجابة قراءة</div>
+          <div class="parent-stat"><b>${data.math}</b>إجابة حساب</div>
+          <div class="parent-stat"><b>${data.writing}</b>تدريب كتابة</div>
         </div>
-        \${tracks.map(t => \`<div class="track-card"><b>\${t.icon} \${t.name}</b><p class="hint">المستوى الحالي: \${t.levels[Math.min(stageCount(t), 2)][0]} — \${stageCount(t)} من 3 مراحل مكتملة</p></div>\`).join('')}
+        ${tracks.map(t => `<div class="track-card"><b>${t.icon} ${t.name}</b><p class="hint">المستوى الحالي: ${t.levels[Math.min(stageCount(t), 2)][0]} — ${stageCount(t)} من 3 مراحل مكتملة</p></div>`).join('')}
         <div class="offline-note">خصوصية الطفل: لا يوجد حساب ولا إرسال بيانات. يمكنك تصدير أو استعادة نسخة احتياطية من بيانات التقدم في أي وقت.</div>
         <div class="screen-actions">
           <button class="secondary" id="exportProgress">📤 تصدير نسخة احتياطية</button>
@@ -182,7 +182,7 @@
           <input type="file" id="importProgressFile" accept=".json,application/json" hidden>
           <button class="secondary" id="resetProgress">🔄 إعادة ضبط التقدم</button>
         </div>
-      \`;
+      `;
       document.getElementById('childNameInput').value = data.childName;
 
       document.getElementById('saveChildName').onclick = () => {
@@ -286,7 +286,7 @@
     try {
       if (!('serviceWorker' in navigator) || !('caches' in window)) throw Error('المتصفح لا يدعم التخزين دون اتصال');
       await navigator.serviceWorker.ready;
-      const cache = await caches.open('little-muslim-v27');
+      const cache = await caches.open('little-muslim-v40');
       const files = [
         './', './index.html', './games.html', './progress.js', './education-enhancements.js', './voice-preferences.js', './game-audio.js',
         './assets/audio/click.ogg', './assets/audio/correct.ogg', './assets/audio/incorrect.ogg',
