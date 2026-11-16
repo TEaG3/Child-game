@@ -1,0 +1,6 @@
+{
+  "version": "1.1.0",
+  "releaseDate": "2026-11-16",
+  "channel": "stable",
+  "updateMode": "service-worker-prompt"
+}
