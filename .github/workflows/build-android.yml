@@ -56,6 +56,12 @@ jobs:
           mkdir -p android-web/assets/audio
           cp assets/audio/*.ogg assets/audio/LICENSE-KENNEY-CC0.txt android-web/assets/audio/
           cp -R assets/audio/letters android-web/assets/audio/
+          test -s android-web/cat.png
+          test -s android-web/assets/audio/letters/names/alif.mp3
+          test -s android-web/assets/audio/letters/sounds/alif.mp3
+          node --check android-web/character-rotation.js
+          node --check android-web/progress.js
+          node --check android-web/voice-preferences.js
       - name: Generate Android project
         run: npx cap add android
       - name: Sync local web assets
