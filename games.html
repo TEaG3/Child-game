@@ -79,8 +79,12 @@ function updateGameStars(){$('#gameStars').textContent='⭐'.repeat(Math.max(1,3
 function draw(){let body=$('#gameBody'),cols=game.deck.length<=8?4:game.deck.length<=12?4:5,state={flipped:[],matched:0,lock:false};body.innerHTML='<div class="grid" style="grid-template-columns:repeat('+cols+',1fr)"></div>';let grid=body.firstChild;game.deck.forEach((x,i)=>{let b=document.createElement('button');b.className='card';b.innerHTML='<div class="inner"><div class="face front">❔</div><div class="face backface">'+x.face+'</div></div>';b.onclick=()=>{if(game.done||state.lock||b.classList.contains('flip')||b.classList.contains('match'))return;b.classList.add('flip');tone(520);state.flipped.push({b,i,id:x.id});if(state.flipped.length<2)return;state.lock=true;let [a,c]=state.flipped;if(a.id===c.id){setTimeout(()=>{a.b.classList.add('match');c.b.classList.add('match');state.matched++;state.flipped=[];state.lock=false;$('#gameProg').style.width=(state.matched/game.n*100)+'%';$('#coach').textContent='أحسنت! ما شاء الله عليك ⭐';celebrate();tone(900);if(state.matched===game.n)setTimeout(finish,450)},300)}else{game.mistakes++;updateGameStars();$('#coach').textContent='لا بأس! حاول مرة أخرى وتذكّر مكان البطاقات.';setTimeout(()=>{a.b.classList.remove('flip');c.b.classList.remove('flip');state.flipped=[];state.lock=false},850)}};grid.appendChild(b)})}
 function finish(){if(game.done)return;game.done=true;let stars=Math.max(1,3-game.mistakes),old=S.stars[game.idx]||0,gain=Math.max(0,stars-old);S.stars[game.idx]=Math.max(old,stars);S.coins+=stars*5+gain*3;if(!S.unlockAll)S.unlocked=Math.max(S.unlocked,Math.min(TOTAL,game.idx+2));save();$('#resultEm').textContent=stars===3?'🏆':'🎉';$('#resultTitle').textContent=stars===3?'ما شاء الله! ممتاز':'أحسنت! أكملت المستوى';$('#resultText').textContent='حصلت على '+stars+' نجوم وأضفت عملات إلى رصيدك.';$('#resultStars').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars);$('#result').hidden=false;tone(1100)}
 function closeResult(){$('#result').hidden=true}
-$('#next')
-<script>
+$('#next').onclick=()=>{closeResult();let n=game.idx+1;if(n<TOTAL&&(S.unlockAll||n<S.unlocked))start(n);else openWorld(world)};
+$('#retry').onclick=()=>{closeResult();start(game.idx)};$('#resultHome').onclick=()=>{closeResult();openWorld(world)};
+$('#worldBack').onclick=()=>{renderWorlds();screen('homeScreen')};$('#gameBack').onclick=()=>openWorld(world);$('#home').onclick=()=>{location.href='./index.html'};$('#sound').onclick=()=>{snd=!snd;S.sound=snd;window.gameSoundEnabled=snd;save();$('#sound').textContent=snd?'🔊':'🔇';$('#sound').setAttribute('aria-label',snd?'إيقاف الصوت':'تشغيل الصوت')};$('#sound').textContent=snd?'🔊':'🔇';$('#sound').setAttribute('aria-label',snd?'إيقاف الصوت':'تشغيل الصوت');
+hud();renderWorlds();
+</script>
+script>
 /* Android TV / TV Box remote navigation (D-pad, OK, Back). */
 (()=>{
  const selector='button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
@@ -125,11 +129,6 @@ $('#next')
  window.addEventListener('load',()=>setTimeout(focusFirst,250));
  document.addEventListener('click',e=>{if(e.target.closest('.tile,.category-card,[data-open]'))setTimeout(focusFirst,180);});
 })();
-</script>
-.onclick=()=>{closeResult();let n=game.idx+1;if(n<TOTAL&&(S.unlockAll||n<S.unlocked))start(n);else openWorld(world)};
-$('#retry').onclick=()=>{closeResult();start(game.idx)};$('#resultHome').onclick=()=>{closeResult();openWorld(world)};
-$('#worldBack').onclick=()=>{renderWorlds();screen('homeScreen')};$('#gameBack').onclick=()=>openWorld(world);$('#home').onclick=()=>{location.href='./index.html'};$('#sound').onclick=()=>{snd=!snd;S.sound=snd;window.gameSoundEnabled=snd;save();$('#sound').textContent=snd?'🔊':'🔇';$('#sound').setAttribute('aria-label',snd?'إيقاف الصوت':'تشغيل الصوت')};$('#sound').textContent=snd?'🔊':'🔇';$('#sound').setAttribute('aria-label',snd?'إيقاف الصوت':'تشغيل الصوت');
-hud();renderWorlds();
 </script><script src="./game-audio.js" defer></script><script src="./voice-preferences.js" defer></script>
 <script src="./cinematic-fx.js" defer></script>
 </body></html>
