@@ -514,7 +514,7 @@ button,a,[tabindex]{scroll-margin:90px}
   if(code===20)map.down='down';
   if(code===21)map.left='left';
   if(code===22)map.right='right';
-  var direction=map[key]||(code===19?'up':code===20?'down':code===21?'left':code===22?'right':null);
+  var direction=map[key]||(code===19||code===38?'up':code===20||code===40?'down':code===21||code===37?'left':code===22||code===39?'right':null);
   var tag=(e.target&&e.target.tagName||'').toLowerCase();
   if(direction){
    if(e.preventDefault)e.preventDefault();
