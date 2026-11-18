@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'letters/**'
       - 'games.html'
       - 'progress.js'
       - 'voice-preferences.js'
@@ -52,11 +53,16 @@ jobs:
       - name: Prepare offline web bundle
         run: |
           mkdir -p android-web
-          cp index.html games.html progress.js voice-preferences.js game-audio.js cinematic-fx.js education-enhancements.js character-rotation.js sw.js manifest.webmanifest icon.svg abdulhay.webp abdulmuhaimin.webp aisha.webp rabbit.png cat.png boy.jpg girl.jpg girl.png cat.jpg rabbit.jpg android-web/
+          cp index.html games.html progress.js voice-preferences.js game-audio.js cinematic-fx.js education-enhancements.js character-rotation.js sw.js version.json manifest.webmanifest icon.svg abdulhay.webp abdulmuhaimin.webp aisha.webp rabbit.png cat.png boy.jpg girl.jpg girl.png cat.jpg rabbit.jpg android-web/
+          cp -R letters android-web/
           mkdir -p android-web/assets/audio
           cp assets/audio/*.ogg assets/audio/LICENSE-KENNEY-CC0.txt android-web/assets/audio/
           cp -R assets/audio/letters android-web/assets/audio/
           test -s android-web/cat.png
+          test -s android-web/version.json
+          test -s android-web/letters/index.html
+          test -s android-web/letters/script.js
+          test -s android-web/letters/style.css
           test -s android-web/assets/audio/letters/names/alif.mp3
           test -s android-web/assets/audio/letters/sounds/alif.mp3
           node --check android-web/character-rotation.js
