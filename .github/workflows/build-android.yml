@@ -6,6 +6,7 @@ on:
       - 'index.html'
       - 'letters/**'
       - 'games.html'
+      - 'education-enhancements.js'
       - 'progress.js'
       - 'voice-preferences.js'
       - 'game-audio.js'
@@ -91,6 +92,44 @@ jobs:
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
+      - name: Build signed release APK when signing secrets are configured
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' && secrets.ANDROID_KEYSTORE_PASSWORD != '' && secrets.ANDROID_KEY_ALIAS != '' && secrets.ANDROID_KEY_PASSWORD != '' }}
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/release-key.jks
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("android/app/build.gradle")
+          text = path.read_text()
+          block = '''\n\nandroid {\n    signingConfigs {\n        release {\n            storeFile rootProject.file("release-key.jks")\n            storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")\n            keyAlias System.getenv("ANDROID_KEY_ALIAS")\n            keyPassword System.getenv("ANDROID_KEY_PASSWORD")\n        }\n    }\n    buildTypes {\n        release {\n            signingConfig signingConfigs.release\n        }\n    }\n}\n'''
+          if "signingConfig signingConfigs.release" in text:
+              raise SystemExit("Release signing config already exists")
+          path.write_text(text + block)
+          PY
+          cd android
+          ./gradlew assembleRelease
+      - name: Upload signed release APK artifact
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' && secrets.ANDROID_KEYSTORE_PASSWORD != '' && secrets.ANDROID_KEY_ALIAS != '' && secrets.ANDROID_KEY_PASSWORD != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: little-muslim-android-release
+          path: android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+          retention-days: 90
+      - name: Publish signed release APK
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' && secrets.ANDROID_KEYSTORE_PASSWORD != '' && secrets.ANDROID_KEY_ALIAS != '' && secrets.ANDROID_KEY_PASSWORD != '' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: android-latest
+          name: رحلة المسلم الصغير - أحدث إصدار Android
+          prerelease: true
+          make_latest: false
+          files: android/app/build/outputs/apk/release/app-release.apk
+          overwrite_files: true
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
