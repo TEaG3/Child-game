@@ -107,6 +107,7 @@ hud();renderWorlds();
  const visible=el=>!!(el.offsetWidth||el.offsetHeight||el.getClientRects().length) && getComputedStyle(el).visibility!=='hidden';
  const items=()=>[...document.querySelectorAll(selector)].filter(el=>visible(el)&&!el.closest('[hidden],[inert]'));
  const center=el=>{const r=el.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2};};
+ let selectedElement=null;
  const focusFirst=()=>{const all=items();if(!all.length)return;const target=all.find(x=>x.matches('#homeBtn,#home,#soundBtn,#sound,.tile,.category-card'))||all[0];target.focus({preventScroll:true});target.scrollIntoView({block:'nearest',inline:'nearest'});};
  const move=dir=>{
   const all=items();if(!all.length)return;
@@ -141,7 +142,7 @@ hud();renderWorlds();
   if(map[e.key]){e.preventDefault();move(map[e.key]);return;}
   if(e.key==='Escape'||e.key==='Backspace'||e.key==='BrowserBack'||e.key==='GoBack'||e.keyCode===4){e.preventDefault();goBack();}
  });
- document.addEventListener('focusin',e=>{if(e.target.matches(selector))e.target.scrollIntoView({block:'nearest',inline:'nearest'});});
+ document.addEventListener('focusin',e=>{if(e.target.matches(selector)){if(!e.target.closest('.virtual-remote'))selectedElement=e.target;e.target.scrollIntoView({block:'nearest',inline:'nearest'});}});
  window.addEventListener('load',()=>setTimeout(focusFirst,250));
  document.addEventListener('click',e=>{if(e.target.closest('.tile,.category-card,[data-open]'))setTimeout(focusFirst,180);});
 })();
@@ -149,8 +150,8 @@ document.querySelectorAll('[data-remote]').forEach(button=>{
  button.addEventListener('click',()=>{
   const key=button.dataset.remote;
   if(key==='OK'){
-   const active=document.activeElement;
-   if(active&&active!==button&&typeof active.click==='function')active.click();
+   if(selectedElement&&selectedElement.isConnected&&visible(selectedElement)&&typeof selectedElement.click==='function')selectedElement.click();
+   else focusFirst();
    return;
   }
   const eventKey=key==='Back'?'Escape':key;
