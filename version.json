@@ -1,14 +1,13 @@
 {
-  "version": "1.2.5",
-  "releaseDate": "2026-11-16",
+  "version": "1.2.6",
+  "releaseDate": "2026-11-18",
   "channel": "stable",
   "updateMode": "service-worker-prompt",
+  "cacheVersion": "little-muslim-v46",
   "features": [
-    "Mascots rotate every five seconds and speak when tapped",
-    "Improved transparent mascot images in the home screen",
-    "Arabic letter name is spoken when selected",
-    "Expanded child-friendly adhkar and duas with speech playback",
-    "Previous and next navigation in adhkar garden",
-    "PWA update prompt and offline cache v39"
+    "Mascot interaction CSS correction",
+    "Education script changes trigger Android builds",
+    "Offline cache and version metadata synchronized",
+    "Android debug build plus optional signed release APK"
   ]
 }
